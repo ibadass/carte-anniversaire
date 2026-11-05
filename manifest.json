@@ -1,0 +1,16 @@
+{
+  "name": "Carte d'anniversaire",
+  "short_name": "Anniversaire",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#2d1b4e",
+  "theme_color": "#2d1b4e",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
