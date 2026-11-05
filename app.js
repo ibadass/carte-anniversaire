@@ -1,10 +1,18 @@
 (function () {
   const cfg = Object.assign({}, window.CARTE_CONFIG);
   const q = new URLSearchParams(location.search);
-  ["nom", "age", "de", "message"].forEach((k) => q.get(k) && (cfg[k] = q.get(k)));
+  ["nom", "age", "de", "message", "photo"].forEach((k) => q.get(k) && (cfg[k] = q.get(k)));
   if (q.get("modules")) cfg.modules = q.get("modules").split(",");
 
   const $ = (s) => document.querySelector(s);
+  if (cfg.photo) {
+    const img = document.createElement("img");
+    img.className = "photo";
+    img.alt = cfg.nom;
+    img.src = cfg.photo;
+    img.onerror = () => img.remove();
+    $("#age").before(img);
+  }
   $("#age").textContent = cfg.age;
   $("#titre").textContent = "Joyeux anniversaire " + cfg.nom + " ! 🎂";
   $("#message").textContent = cfg.message;

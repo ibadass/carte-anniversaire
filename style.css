@@ -8,6 +8,7 @@ body {
 }
 #app { min-height: 100%; display: flex; flex-direction: column; }
 header { text-align: center; padding: 28px 18px 8px; }
+header .photo { width: 180px; height: 180px; object-fit: cover; object-position: center 25%; border-radius: 50%; border: 5px solid #ffd86b; box-shadow: 0 0 25px #ffb300; display: block; margin: 0 auto 12px; }
 header .age { font-size: 5rem; line-height: 1; margin: 0; color: #ffd86b; text-shadow: 0 0 20px #ffb300; }
 header h1 { font-size: 1.9rem; margin: 6px 0; }
 header p { font-size: 1.25rem; line-height: 1.5; margin: 10px auto; max-width: 30rem; }

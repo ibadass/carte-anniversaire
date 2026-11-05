@@ -1,7 +1,9 @@
 // Personnalise la carte ici (ou via l'URL : ?nom=Jeanne&age=80&de=Tes+petits-enfants)
 window.CARTE_CONFIG = {
-  nom: "Mamie",
+  nom: "Papa",
   age: 80,
+  photo: "papa.jpg", // mettre "" pour masquer la photo
+
   de: "Ta famille qui t'aime",
   message:
     "80 ans de sourires, de belles histoires et de tendresse. Tu es notre plus beau livre, et on n'a pas fini de te lire !",
