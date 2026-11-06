@@ -362,3 +362,9 @@ body.playing .cell .ico { font-size: clamp(.8rem, 4vw, 1.15rem); }
 .taille { display: flex; align-items: center; justify-content: center; gap: 10px; color: #cfe3ff; font-size: .9rem; }
 .taille button { min-width: 56px; min-height: 40px; border-radius: 12px; border: 2px solid rgba(207,227,255,.6); background: transparent; color: #fff; font-family: inherit; font-weight: bold; font-size: 1.1rem; }
 .taille button:disabled { opacity: .35; }
+
+/* Le pion attend hors du plateau avant le premier lancer */
+.ecran-haut .depart { display: none; background: transparent; padding: 4px 0 0; min-width: 0; font-size: 1.05rem; }
+.ecran-haut .depart:has(.pion) { display: flex; justify-content: center; align-items: center; gap: 8px; }
+.ecran-haut .depart:has(.pion)::after { content: "est prêt à partir !"; color: #ffd95a; }
+.ecran-haut .depart .pion { font-size: 1.6rem; }

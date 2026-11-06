@@ -295,7 +295,7 @@
           });
         }
 
-        const depart = el("div", "depart", "Départ");
+        const depart = el("div", "depart", "");
         const pion = el("span", "pion", "👴");
         const de = el("div", "scene");
         const cube = el("div", "cube");
@@ -707,10 +707,10 @@
           cube.classList.add("idle");
         };
         const row = el("div", "oie-bar");
-        row.append(depart, raz);
+        row.append(raz);
         // Un seul écran : score en haut, plateau au milieu, dé et boutons en bas
         const haut = el("div", "ecran-haut");
-        haut.append(hud, info);
+        haut.append(hud, depart, info);
         const bas = el("div", "ecran-bas");
         const cmd = el("div", "cmd");
         // Taille du texte réglable (mémorisée)
