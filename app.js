@@ -271,9 +271,56 @@
             await sleep(260);
           }
         };
+        const NIVEAUX = [[0, "🌱 Apprenti"], [100, "🧳 Voyageur"], [250, "🧭 Explorateur"], [450, "🌍 Globe-trotter"], [700, "🏅 Champion"], [1000, "👑 Légende"]];
+        const REC = "carte80-record";
+        let score = 0, serie = 0, record = +(localStorage.getItem(REC) || 0);
+        const vues = new Set();
+        const hud = el("div", "hud");
+        const hudPts = el("b", "hud-pts", "0");
+        const hudNiv = el("span", "hud-niv", "");
+        const hudRec = el("span", "hud-rec", "");
+        const hudBar = el("i", "hud-fill");
+        const hudTrack = el("div", "hud-track");
+        hudTrack.append(hudBar);
+        hud.append(el("div", "hud-top", ""), hudTrack, hudRec);
+        hud.firstChild.append(el("span", "", "⭐ "), hudPts, el("span", "", " pts"), hudNiv);
+        const majHud = () => {
+          hudPts.textContent = score;
+          let i = NIVEAUX.length - 1;
+          while (NIVEAUX[i][0] > score) i--;
+          const nxt = NIVEAUX[i + 1];
+          hudNiv.textContent = NIVEAUX[i][1];
+          hudBar.style.width = (nxt ? Math.round(((score - NIVEAUX[i][0]) / (nxt[0] - NIVEAUX[i][0])) * 100) : 100) + "%";
+          hudRec.textContent = (nxt ? "Prochain niveau : " + nxt[1] + " à " + nxt[0] + " pts · " : "Niveau maximum ! · ") + "🏆 Record : " + record;
+          return NIVEAUX[i][1];
+        };
+        const gagner = (pts, why) => {
+          const avant = hudNiv.textContent;
+          score += pts;
+          if (score > record) { record = score; localStorage.setItem(REC, String(record)); }
+          const niv = majHud();
+          hudPts.classList.remove("bump");
+          void hudPts.offsetWidth;
+          hudPts.classList.add("bump");
+          const t = el("div", "gain", "+" + pts + " " + why);
+          (dlg.open ? dlg : document.body).append(t);
+          setTimeout(() => t.remove(), 1800);
+          if (avant && avant !== niv) {
+            const l = el("div", "gain niveau", "🎉 Nouveau niveau : " + niv);
+            (dlg.open ? dlg : document.body).append(l);
+            setTimeout(() => l.remove(), 2600);
+            flash();
+          }
+        };
+        const premiere = (n, pts, why) => {
+          if (vues.has(n)) return;
+          vues.add(n);
+          gagner(pts, why);
+        };
         const reveal = async (n) => {
           const p = pieges.get(n);
           if (p) {
+            premiere(n, 15, "Courage, piège relevé !");
             cells[n].classList.add("ouverte", "piege-hit");
             flash(true);
             await say(p.e + " " + p.titre);
@@ -285,6 +332,7 @@
             cells[n].classList.add("ouverte");
             lit(n, "lit");
             flash();
+            premiere(n, 10, lib.kind === "blague" ? "Un bon rire !" : "Case découverte !");
             await say(lib.kind === "blague" ? "😂 Blague de Papa : " + lib.txt : lib.txt);
             return;
           }
@@ -307,8 +355,14 @@
                   if (x.textContent === bonne) x.classList.add("ok");
                 });
                 if (txt !== bonne) b.classList.add("ko");
-                popTxt.textContent = (txt === bonne ? "✅ Bravo ! " : "❌ Raté ! ") + q.r;
+                const ok = txt === bonne;
+                popTxt.textContent = (ok ? "✅ Bravo ! " : "❌ Raté ! ") + q.r;
                 close.hidden = false;
+                if (!vues.has(n)) {
+                  serie = ok ? serie + 1 : 0;
+                  const bonus = ok && serie >= 2 ? 10 * Math.min(serie - 1, 5) : 0;
+                  premiere(n, ok ? 50 + bonus : 10, ok ? (bonus ? "Série de " + serie + " !" : "Bonne réponse !") : "Merci d'avoir tenté !");
+                }
               };
               opts.append(b);
             });
@@ -329,7 +383,8 @@
             lit(80, "lit");
             flash();
             spectacle(8000);
-            await say("🏆 Bravo Papa ! Tu as atteint tes 80 ans !");
+            gagner(200, "Arrivée à 80 ans !");
+            await say("🏆 Bravo Papa ! Tu as atteint tes 80 ans avec " + score + " points !");
             info.textContent = "🏆 Tu as gagné ! Bon anniversaire Papa !";
             return;
           }
@@ -337,6 +392,7 @@
             cells[n].classList.add("ouverte");
             lit(n, "lit");
             flash();
+            premiere(n, 30, "Un cadeau !");
             await say("🎁 Cadeau ! Ouvre le cadeau physique qui t'attend !");
             return;
           }
@@ -379,7 +435,12 @@
           let target = pos + r;
           if (target > 80) target = 160 - target;
           cells[Math.min(target, 80)].scrollIntoView({ behavior: "smooth", block: "center" });
+          const depuis = pos;
           await move(target);
+          if (pos > depuis) gagner(2 * (pos - depuis), "En avance !");
+          for (let p = Math.max(10, Math.ceil((depuis + 1) / 10) * 10); p <= Math.min(pos, 70); p += 10) {
+            premiere("palier" + p, 25, "Palier " + p + " franchi !");
+          }
           await arrive(pos);
           stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
           info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "Case " + pos + " / 80 · ✨ face magique : 1 chance sur 8 à chaque lancer";
@@ -392,6 +453,10 @@
           if (busy) return;
           pos = 0;
           lancers = 0;
+          score = 0;
+          serie = 0;
+          vues.clear();
+          majHud();
           Object.keys(cells).forEach((k) => {
             cells[k].classList.remove("ouverte", "lit", "piege-hit");
             if (+k !== 80) {
@@ -408,11 +473,12 @@
         const stage = el("div", "stage");
         const row = el("div", "oie-bar");
         row.append(depart, raz);
-        stage.append(el("h2", "stage-t", "À toi de jouer, Papa !"), de, btn, info, row);
+        stage.append(el("h2", "stage-t", "À toi de jouer, Papa !"), hud, de, btn, info, row);
         board.append(el("h2", "stage-t", "Le plateau"), el("p", "hint", "Chaque case est à découvrir… 🤫"), plateau);
         s.append(stage, board);
         stageEl = stage;
         placePion();
+        majHud();
       },
     },
     calendrier: {

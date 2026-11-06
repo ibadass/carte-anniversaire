@@ -235,3 +235,17 @@ header .go { width: 100%; max-width: 20rem; margin: 26px auto 8px; }
 .cube .face { outline: 1px solid transparent; }
 .cube .core { inset: 2px; }
 .scene::after { left: 12%; right: 12%; bottom: -26px; height: 20px; }
+
+/* ---- Score ---- */
+.hud { margin: 6px auto 0; max-width: 20rem; padding: 10px 14px 12px; border-radius: 16px; background: rgba(8,12,40,.45); border: 1px solid rgba(244,197,66,.5); }
+.hud-top { display: flex; align-items: baseline; justify-content: center; gap: 2px; flex-wrap: wrap; font-size: 1.1rem; }
+.hud-pts { font-size: 1.9rem; color: #ffd95a; display: inline-block; min-width: 1ch; }
+.hud-pts.bump { animation: bump .5s ease-out; }
+@keyframes bump { 40% { transform: scale(1.5); color: #fff; } }
+.hud-niv { margin-left: 12px; font-weight: bold; color: #bfe6ff; }
+.hud-track { height: 10px; border-radius: 99px; background: rgba(255,255,255,.18); overflow: hidden; margin: 8px 0 6px; }
+.hud-fill { display: block; height: 100%; width: 0; border-radius: 99px; background: linear-gradient(90deg, #ffd95a, #ff69b4); transition: width .6s ease-out; }
+.hud-rec { display: block; font-size: .8rem; opacity: .85; text-align: center; }
+.gain { position: fixed; left: 50%; top: 42%; transform: translateX(-50%); z-index: 60; padding: 10px 18px; border-radius: 99px; background: linear-gradient(180deg, #ffd95a, #f0a500); color: #13294b; font-weight: bold; font-size: 1.2rem; box-shadow: 0 6px 20px rgba(0,0,0,.4); pointer-events: none; white-space: nowrap; animation: gain 1.8s ease-out forwards; }
+@keyframes gain { 0% { opacity: 0; transform: translate(-50%, 20px) scale(.7); } 15% { opacity: 1; transform: translate(-50%, 0) scale(1.1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -70px); } }
+.gain.niveau { top: 28%; font-size: 1.4rem; background: linear-gradient(180deg, #ff9ecb, #e75480); color: #fff; animation-duration: 2.6s; }
