@@ -17,7 +17,7 @@
   $("#titre").textContent = cfg.titre || "Joyeux anniversaire " + cfg.nom + " ! 🎂";
   $("#message").textContent = cfg.message;
   $("#accueil").textContent = cfg.accueil || "";
-  $("#go").onclick = () => $("#main").scrollIntoView({ behavior: "smooth" });
+  $("#go").onclick = () => { document.body.classList.add("playing"); scrollTo(0, 0); };
   $("#de").textContent = "Avec tout notre amour, " + cfg.de + " 💝";
   document.title = "Joyeux anniversaire " + cfg.nom + " !";
 
@@ -201,7 +201,35 @@
         const de = el("div", "scene");
         const cube = el("div", "cube");
         const faces = ["⚀", "⚅", "⚂", "⚃", "⚁", "⚄"];
-        ["f1", "f6", "f3", "f4", "f2", "f5"].forEach((cls, i) => cube.append(el("div", "face " + cls, faces[i])));
+        const faceEl = {};
+        ["f1", "f6", "f3", "f4", "f2", "f5"].forEach((cls, i) => {
+          faceEl[cls] = el("div", "face " + cls, faces[i]);
+          cube.append(faceEl[cls]);
+        });
+        const f6 = faceEl.f6;
+        const pipsF6 = f6.textContent;
+        const photoOn = () => {
+          f6.textContent = "";
+          f6.classList.add("photo-face");
+          if (cfg.photo) f6.style.backgroundImage = "url(" + cfg.photo + ")";
+        };
+        const photoOff = () => {
+          f6.textContent = pipsF6;
+          f6.classList.remove("photo-face");
+          f6.style.backgroundImage = "";
+        };
+        let lancers = 0;
+        const EVERY = 5;
+        const choisir = () => new Promise((res) => {
+          Object.keys(cells).forEach((k) => {
+            if (+k === 80) return;
+            cells[k].classList.add("choix");
+            cells[k].onclick = () => {
+              Object.values(cells).forEach((c) => { c.classList.remove("choix"); c.onclick = null; });
+              res(+k);
+            };
+          });
+        });
         de.append(cube);
         const cubeAt = { x: 0, y: 0 };
         const SHOW = { 1: [0, 0], 6: [0, 180], 3: [0, -90], 4: [0, 90], 2: [-90, 0], 5: [90, 0] };
@@ -216,6 +244,7 @@
         let pos = 0;
         let busy = false;
         let stageEl;
+        const board = el("div", "board");
         const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
         const placePion = () => (pos ? cells[pos].append(pion) : depart.append(pion));
         const lit = (n, cls) => {
@@ -239,34 +268,33 @@
             await sleep(260);
           }
         };
-        const reveal = async () => {
-          const p = pieges.get(pos);
+        const reveal = async (n) => {
+          const p = pieges.get(n);
           if (p) {
-            cells[pos].classList.add("ouverte", "piege-hit");
+            cells[n].classList.add("ouverte", "piege-hit");
             flash(true);
             await say(p.e + " " + p.titre);
             await say(p.gage);
             return;
           }
-          const lib = libres.get(pos);
+          const lib = libres.get(n);
           if (lib) {
-            cells[pos].classList.add("ouverte");
-            lit(pos, "lit");
+            cells[n].classList.add("ouverte");
+            lit(n, "lit");
             flash();
             await say(lib.kind === "blague" ? "😂 Blague de Papa : " + lib.txt : lib.txt);
             return;
           }
-          const q = questions.get(pos);
+          const q = questions.get(n);
           if (!q) return;
-          cells[pos].classList.add("ouverte");
-          lit(pos, "lit");
+          cells[n].classList.add("ouverte");
+          lit(n, "lit");
           flash();
           await say("❓ " + q.q);
           await say("💡 " + q.r);
         };
-        const arrive = async () => {
-          if (!pos) return;
-          if (pos === 80) {
+        const arrive = async (n) => {
+          if (n === 80) {
             cells[80].classList.add("ouverte");
             lit(80, "lit");
             flash();
@@ -275,20 +303,23 @@
             info.textContent = "🏆 Tu as gagné ! Bon anniversaire Papa !";
             return;
           }
-          if (cadeaux.has(pos)) {
-            cells[pos].classList.add("ouverte");
-            lit(pos, "lit");
+          if (cadeaux.has(n)) {
+            cells[n].classList.add("ouverte");
+            lit(n, "lit");
             flash();
             await say("🎁 Cadeau ! Ouvre le cadeau physique qui t'attend !");
             return;
           }
-          await reveal();
+          await reveal(n);
         };
         btn.onclick = async () => {
           if (busy || pos === 80) return;
           busy = true;
           btn.disabled = true;
-          const r = rnd6();
+          lancers++;
+          const bonus = lancers % EVERY === 0;
+          const r = bonus ? 6 : rnd6();
+          if (bonus) photoOn();
           cube.classList.remove("idle");
           void cube.offsetWidth;
           const [tx, ty] = SHOW[r];
@@ -298,14 +329,29 @@
           de.classList.remove("throw");
           void de.offsetWidth;
           de.classList.add("throw");
+          await sleep(1900);
+          if (bonus) {
+            board.scrollIntoView({ behavior: "smooth", block: "start" });
+            info.textContent = "📸 Touche n'importe quelle case pour l'ouvrir !";
+            await say("📸 Face photo ! Choisis n'importe quelle case du plateau à ouvrir.");
+            const n = await choisir();
+            cells[n].scrollIntoView({ behavior: "smooth", block: "center" });
+            await arrive(n);
+            photoOff();
+            stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
+            info.textContent = "Case " + pos + " / 80";
+            busy = false;
+            btn.disabled = false;
+            return;
+          }
           let target = pos + r;
           if (target > 80) target = 160 - target;
-          await sleep(1900);
           cells[Math.min(target, 80)].scrollIntoView({ behavior: "smooth", block: "center" });
           await move(target);
-          await arrive();
+          await arrive(pos);
           stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
-          info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "Case " + pos + " / 80";
+          const reste = EVERY - (lancers % EVERY);
+          info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "Case " + pos + " / 80 · 📸 face photo dans " + reste + " lancer" + (reste > 1 ? "s" : "");
           busy = false;
           btn.textContent = "🎲 Lancer le dé";
           btn.disabled = pos === 80;
@@ -314,6 +360,7 @@
         raz.onclick = () => {
           if (busy) return;
           pos = 0;
+          lancers = 0;
           Object.values(cells).forEach((c) => c.classList.remove("ouverte", "lit", "piege-hit"));
           placePion();
           info.textContent = "Atteins la case 80 pour fêter tes 80 ans !";
@@ -325,7 +372,6 @@
         const row = el("div", "oie-bar");
         row.append(depart, raz);
         stage.append(el("h2", "stage-t", "À toi de jouer, Papa !"), de, btn, info, row);
-        const board = el("div", "board");
         board.append(el("h2", "stage-t", "Le plateau"), plateau);
         s.append(stage, board);
         stageEl = stage;
