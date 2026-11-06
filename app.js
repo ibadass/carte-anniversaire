@@ -580,7 +580,7 @@
           if (busy || pos === 80) return;
           busy = true;
           veutLancer = false;
-          btn.classList.remove("pret");
+          de.classList.remove("pret");
           btn.disabled = true;
           lancers++;
           const bonus = rnd(8) === 0;
@@ -642,7 +642,7 @@
             await sleep(500);
             btn.onclick();
           } else {
-            btn.classList.add("pret");
+            de.classList.add("pret");
           }
         };
         const raz = el("button", "big petit", "↺ Recommencer");
@@ -679,7 +679,7 @@
         haut.append(hud, info);
         const bas = el("div", "ecran-bas");
         const cmd = el("div", "cmd");
-        cmd.append(btn, row);
+        cmd.append(row);
         bas.append(de, cmd);
         board.append(plateau);
         s.append(haut, board, bas);

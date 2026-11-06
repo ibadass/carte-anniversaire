@@ -5,7 +5,7 @@ window.CARTE_CONFIG = {
   accueil: "Bonjour Bernard et bon anniversaire ! Je vous souhaite une belle expérience...!",
   age: 80,
   photo: "IMG_8596.jpeg", // mettre "" pour masquer la photo
-  de: "Claudine, Florence, Dominique, François, Philippe, Nicole, Olivier, Claire et toute la tribu",
+  de: "Claudine, Florence, Dominique, François et tes petits enfants MJCNEM 😉😘",
   message:
     "80 ans de sourires, de belles histoires et de tendresse. Tu es notre plus beau livre, et on n'a pas fini de te lire !",
   // Ordre et choix des modules : "calendrier", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"
