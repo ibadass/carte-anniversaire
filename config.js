@@ -114,12 +114,16 @@ window.CARTE_CONFIG = {
     ],
     // Mini-sudoku 10x10 (blocs de 2 lignes x 5 colonnes, chiffres 0 à 9) : "." = case vide
     sudoku: {
-      case: 13,
+      cases: [13, 29, 45, 61, 77],
       puzzle: ["5486.31729", "7.13...5.4", ".04.3798.2", "82.765.13.", "2.3.8.60.5", "...4...287", "31.092.648", ".87.40..91", "462.5.09..", ".301.82..6"],
       solution: ["5486031729", "7913268504", "1045379862", "8297654130", "2739846015", "0564193287", "3150927648", "6872405391", "4628510973", "9301782456"],
     },
     // Les cases libres alternent : blague, personne, blague, personne, musique
     blagues: [
+      "Quel est le comble pour un jardinier ? De raconter des salades. 🥬",
+      "Quel est le comble pour un électricien ? De ne pas être au courant. ⚡",
+      "Que dit un fromager quand il est content ? « C'est du Brie-llant ! » 🧀",
+      "Pourquoi les plongeurs plongent-ils toujours en arrière ? Parce que sinon ils tombent dans le bateau ! 🤿",
       "À 80 ans, on n'est pas vieux : on est en édition collector, numérotée, et sans garantie constructeur. 🏆",
       "Papa, à ton âge, les bougies coûtent plus cher que le gâteau. Heureusement, les pompiers sont gentils. 🎂🚒",
       "Un ingénieur de Saint-Gobain, ça ne casse jamais rien... sauf la glace, pour faire de belles vitres. 🪟",
@@ -199,6 +203,35 @@ window.CARTE_CONFIG = {
       { case: 70, q: "En quelle année Saint-Gobain a-t-elle été fondée ?", r: "En 1665, sous Colbert, comme manufacture royale de glaces." },
       { case: 74, q: "Dans quel massif se trouve Pralognan-la-Vanoise ?", r: "Dans la Vanoise, en Savoie." },
       { case: 78, q: "Quel monument de Paris a été construit pour l'Exposition universelle de 1889 ?", r: "La tour Eiffel, de Gustave Eiffel." },
+    ],
+    // Questions supplémentaires (tirées au sort avec les 20 ci-dessus) ; la première réponse est la bonne
+    questionsPlus: [
+      { q: "Qui chante « Ne me quitte pas » ?", r: "Jacques Brel, en 1959.", choix: ["Jacques Brel", "Georges Brassens", "Léo Ferré"] },
+      { q: "Quel poète-chanteur a écrit « Les copains d'abord » ?", r: "Georges Brassens, en 1964 : tout pour les copains !", choix: ["Georges Brassens", "Jacques Brel", "Serge Reggiani"] },
+      { q: "Qui chante « La Mer » (« La mer qu'on voit danser… ») ?", r: "Charles Trenet, en 1946, l'année de ta naissance !", choix: ["Charles Trenet", "Yves Montand", "Charles Aznavour"] },
+      { q: "Quel acteur joue avec Bourvil dans « La Grande Vadrouille » ?", r: "Louis de Funès, en 1966.", choix: ["Louis de Funès", "Jean Gabin", "Fernandel"] },
+      { q: "Comment s'appelle le capitaine ami de Tintin, à la barbe noire ?", r: "Le capitaine Haddock : « Mille milliards de mille sabords ! »", choix: ["Haddock", "Tournesol", "Dupond"] },
+      { q: "Qu'est-ce qui donne sa force surhumaine à Astérix ?", r: "La potion magique du druide Panoramix.", choix: ["La potion magique", "Les sangliers rôtis", "Le vin de la Gaule"] },
+      { q: "De quelle couleur est le maillot du leader du Tour de France ?", r: "Jaune, depuis 1919.", choix: ["Jaune", "Vert", "À pois"] },
+      { q: "Quel Breton, surnommé « le Blaireau », a gagné 5 Tours de France ?", r: "Bernard Hinault, entre 1978 et 1985.", choix: ["Bernard Hinault", "Laurent Fignon", "Raymond Poulidor"] },
+      { q: "Comment s'appelle le grand tournoi de rugby entre la France, l'Angleterre, l'Écosse, l'Irlande, le pays de Galles et l'Italie ?", r: "Le Tournoi des Six Nations.", choix: ["Les Six Nations", "La Coupe du monde", "Le Grand Chelem d'hiver"] },
+      { q: "Quelle est la capitale du Brésil ?", r: "Brasilia, et non Rio ni São Paulo.", choix: ["Brasilia", "Rio de Janeiro", "São Paulo"] },
+      { q: "Quel est le plus haut sommet des Alpes ?", r: "Le mont Blanc, environ 4 806 m.", choix: ["Le mont Blanc", "Le Cervin", "La Meije"] },
+      { q: "Quelle est la préfecture de la Savoie ?", r: "Chambéry.", choix: ["Chambéry", "Annecy", "Grenoble"] },
+      { q: "En quelle année la France a-t-elle gagné sa première Coupe du monde de football ?", r: "En 1998, à Paris, avec Zidane.", choix: ["1998", "1984", "2006"] },
+      { q: "Qui a été élu président de la République en 1981 ?", r: "François Mitterrand.", choix: ["François Mitterrand", "Valéry Giscard d'Estaing", "Jacques Chirac"] },
+      { q: "En quelle année éclate la Révolution française ?", r: "En 1789, avec la prise de la Bastille le 14 juillet.", choix: ["1789", "1815", "1848"] },
+      { q: "Dans quelle ville Papa est-il né le 6 novembre 1946 ?", r: "À Paris, bien sûr !", choix: ["Paris", "Nancy", "Mongeron"] },
+      { q: "Quelle école d'ingénieurs Papa a-t-il fréquentée ?", r: "Les Écoles des Mines de Nancy.", choix: ["Les Mines de Nancy", "Polytechnique", "Centrale"] },
+      { q: "Dans quel lycée Papa a-t-il fait ses études ?", r: "Au lycée de Mongeron.", choix: ["Mongeron", "Louis-le-Grand", "Henri-IV"] },
+      { q: "Comment s'appelle le petit frère de Papa ?", r: "Philippe, avec Nicole à ses côtés.", choix: ["Philippe", "Olivier", "Joël"] },
+      { q: "Quels sont les prénoms des parents de Papa ?", r: "Roger et Odette.", choix: ["Roger et Odette", "Marcel et Odile", "Paul et Odette"] },
+      { q: "Quelle entreprise informatique, celle des « 1000 métiers », a employé Papa ?", r: "Bull !", choix: ["Bull", "IBM", "Olivetti"] },
+      { q: "Quelle entreprise a été le premier employeur de Papa ?", r: "Saint-Gobain, fondée en 1665.", choix: ["Saint-Gobain", "Bull", "Renault"] },
+      { q: "Quelle mer baigne Marseille ?", r: "La Méditerranée.", choix: ["La Méditerranée", "L'Atlantique", "La Manche"] },
+      { q: "Quel fromage savoyard est servi fondu à la fondue ?", r: "Le beaufort, le comté ou l'emmental : tout le monde tire sur le fil !", choix: ["Le beaufort", "Le camembert", "Le roquefort"] },
+      { q: "Quel est le prénom de l'épouse de Papa ?", r: "Claudine, avec plus de 50 ans de mariage !", choix: ["Claudine", "Odette", "Nicole"] },
+      { q: "Comment s'appelle le chat de Philippe Geluck ?", r: "Le Chat, tout simplement !", choix: ["Le Chat", "Garfield", "Félix"] },
     ],
     // Choix de réponse par case : la première est la bonne (mélangées à l'affichage)
     choix: {

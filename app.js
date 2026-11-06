@@ -66,6 +66,20 @@
     setTimeout(() => clearInterval(fwTimer), ms);
   }
 
+  function grandFinal() {
+    clearInterval(fwTimer);
+    let t = 0;
+    const salve = () => {
+      for (let i = 0; i < 3; i++) setTimeout(show, i * 120);
+      if (t++ % 8 === 0) kisses(12);
+    };
+    salve();
+    fwTimer = setInterval(() => {
+      salve();
+      if (t > 160) clearInterval(fwTimer);
+    }, 300);
+  }
+
   // ---------- Bisous (pluie de cœurs) ----------
   const fx = $("#fx"), xctx = fx.getContext("2d");
   let hearts = [];
@@ -148,16 +162,40 @@
       build(s) {
         const conf = cfg.oie || {};
         const cadeaux = new Set(conf.cadeaux || []);
-        const questions = new Map((conf.questions || []).map((q) => [q.case, q]));
+        const melange = (arr) => {
+          const t = arr.slice();
+          for (let i = t.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [t[i], t[j]] = [t[j], t[i]];
+          }
+          return t;
+        };
+        // Les 20 cases questions piochent au hasard dans un lot plus grand (questions + questionsPlus)
+        const slots = (conf.questions || []).map((q) => q.case);
+        const pool = (conf.questions || []).map((q) => ({ q: q.q, r: q.r, choix: (conf.choix || {})[q.case] })).concat(conf.questionsPlus || []);
+        const tirage = melange(pool);
+        const questions = new Map(slots.map((c, i) => [c, tirage[i]]).filter((e) => e[1]));
         const pieges = new Map((conf.pieges || []).map((p) => [p.case, p]));
         // Cases libres : blague, personne, blague, personne, musique
         const SUD = conf.sudoku || {};
+        // Chaque case sudoku reçoit une variante de la grille (chiffres, lignes et colonnes permutés)
+        const variante = () => {
+          const perm = melange([..."0123456789"]);
+          const bandes = melange([0, 1, 2, 3, 4]).flatMap((b) => melange([0, 1]).map((k) => b * 2 + k));
+          const piles = melange([0, 1]).flatMap((p) => melange([0, 1, 2, 3, 4]).map((k) => p * 5 + k));
+          const f = (g) => bandes.map((r) => piles.map((c) => {
+            const ch = g[r][c];
+            return ch === "." ? "." : perm[+ch];
+          }).join(""));
+          return { puzzle: f(SUD.puzzle), solution: f(SUD.solution), fait: false };
+        };
+        const sudokus = new Map((SUD.cases || []).map((c) => [c, variante()]));
         const libres = new Map();
         const seq = ["blague", "personnes", "blague", "personnes", "musiques"];
         const cnt = {};
         let li = 0;
         for (let n = 1; n < 80; n++) {
-          if (cadeaux.has(n) || questions.has(n) || pieges.has(n) || n === SUD.case) continue;
+          if (cadeaux.has(n) || questions.has(n) || pieges.has(n) || sudokus.has(n)) continue;
           const k = seq[li++ % seq.length];
           const key = k === "blague" ? "blagues" : k;
           const arr = conf[key] || [];
@@ -194,8 +232,8 @@
           if (row % 2 === 1) nums.reverse();
           nums.forEach((n) => {
             const lib = libres.get(n);
-            const kind = n === 80 ? " fin" : pieges.has(n) ? " piege" : cadeaux.has(n) ? " cadeau" : questions.has(n) ? " question" : n === SUD.case ? " sudoku" : lib ? " " + lib.kind : "";
-            const ico = n === 80 ? "🏁" : pieges.has(n) ? pieges.get(n).e : cadeaux.has(n) ? "🎁" : questions.has(n) ? "❓" : n === SUD.case ? "🧩" : lib ? { blague: "😂", personnes: "👪", musiques: "🎵" }[lib.kind] : "";
+            const kind = n === 80 ? " fin" : pieges.has(n) ? " piege" : cadeaux.has(n) ? " cadeau" : questions.has(n) ? " question" : sudokus.has(n) ? " sudoku" : lib ? " " + lib.kind : "";
+            const ico = n === 80 ? "🏁" : pieges.has(n) ? pieges.get(n).e : cadeaux.has(n) ? "🎁" : questions.has(n) ? "❓" : sudokus.has(n) ? "🧩" : lib ? { blague: "😂", personnes: "👪", musiques: "🎵" }[lib.kind] : "";
             const c = el("div", "cell" + kind + (n === 80 ? "" : " cache"));
             c._ico = ico;
             c.append(el("span", "num", String(n)), el("span", "ico", n === 80 ? ico : "❔"));
@@ -237,6 +275,8 @@
         const tilt = el("div", "tilt");
         tilt.append(cube);
         de.append(tilt);
+        de.classList.add("tap");
+        de.onclick = () => btn.click();
         const cubeAt = { x: 0, y: 0 };
         const SHOW = { 1: [0, 0], 6: [0, 180], 3: [0, -90], 4: [0, 90], 2: [-90, 0], 5: [90, 0] };
         const btn = el("button", "big", "🚀 Démarrer le jeu");
@@ -322,34 +362,34 @@
           vues.add(n);
           gagner(pts, why);
         };
-        let sudokuFait = false;
         let rejouer = false;
-        const sudoku = () => new Promise((res) => {
+        const sudoku = (n) => new Promise((res) => {
+          const S = sudokus.get(n);
           const sd = document.createElement("dialog");
           sd.className = "pop sudoku-pop";
           const grille = el("div", "sdk");
           const msg = el("p", "sdk-msg", "🧩 Complète la grille : chaque ligne, chaque colonne et chaque bloc de 2×5 doit contenir tous les chiffres de 0 à 9 !");
-          const val = SUD.puzzle.map((r) => r.split(""));
-          const sol = SUD.solution;
+          const val = S.puzzle.map((r) => r.split(""));
+          const sol = S.solution;
           const btns = [];
           let sel = null;
           const choisirCase = (r, c) => {
-            if (sudokuFait || SUD.puzzle[r][c] !== ".") return;
+            if (S.fait || S.puzzle[r][c] !== ".") return;
             sel = [r, c];
             btns.forEach((b) => b.classList.remove("sel"));
             btns[r * 10 + c].classList.add("sel");
           };
           for (let r = 0; r < 10; r++) {
             for (let c = 0; c < 10; c++) {
-              const fixe = SUD.puzzle[r][c] !== ".";
-              const b = el("button", "sdk-c" + (fixe ? " fixe" : "") + (r % 2 === 1 ? " bb" : "") + (c === 4 ? " br" : ""), fixe ? SUD.puzzle[r][c] : "");
+              const fixe = S.puzzle[r][c] !== ".";
+              const b = el("button", "sdk-c" + (fixe ? " fixe" : "") + (r % 2 === 1 ? " bb" : "") + (c === 4 ? " br" : ""), fixe ? S.puzzle[r][c] : "");
               b.onclick = () => choisirCase(r, c);
               btns.push(b);
               grille.append(b);
             }
           }
           const mettre = (v) => {
-            if (!sel || sudokuFait) return;
+            if (!sel || S.fait) return;
             const [r, c] = sel;
             val[r][c] = v;
             btns[r * 10 + c].textContent = v === "." ? "" : v;
@@ -367,15 +407,15 @@
           const verif = el("button", "pop-close", "Vérifier ✔");
           const quitter = el("button", "pop-close alt", "Plus tard ✕");
           verif.onclick = () => {
-            if (sudokuFait) return sd.close();
+            if (S.fait) return sd.close();
             let faux = 0, vide = 0;
             for (let r = 0; r < 10; r++) for (let c = 0; c < 10; c++) {
-              if (SUD.puzzle[r][c] !== ".") continue;
+              if (S.puzzle[r][c] !== ".") continue;
               if (val[r][c] === ".") vide++;
               else if (val[r][c] !== sol[r][c]) { faux++; btns[r * 10 + c].classList.add("err"); }
             }
             if (!faux && !vide) {
-              sudokuFait = true;
+              S.fait = true;
               msg.textContent = "🎉 Sudoku réussi, bravo Papa !";
               verif.textContent = "Continuer ✕";
               quitter.hidden = true;
@@ -392,11 +432,11 @@
           sd.showModal ? sd.showModal() : sd.setAttribute("open", "");
         });
         const reveal = async (n) => {
-          if (n === SUD.case) {
+          if (sudokus.has(n)) {
             cells[n].classList.add("ouverte");
             lit(n, "lit");
             flash();
-            await sudoku();
+            await sudoku(n);
             return;
           }
           const p = pieges.get(n);
@@ -422,7 +462,7 @@
           cells[n].classList.add("ouverte");
           lit(n, "lit");
           flash();
-          const ch = (conf.choix || {})[n];
+          const ch = q.choix;
           if (ch) {
             const bonne = ch[0];
             const mel = ch.slice().sort(() => Math.random() - 0.5);
@@ -463,9 +503,15 @@
             cells[80].classList.add("ouverte");
             lit(80, "lit");
             flash();
-            spectacle(8000);
+            grandFinal();
             gagner(200, "Arrivée à 80 ans !");
-            await say("🏆 Bravo Papa ! Tu as atteint tes 80 ans avec " + score + " points !");
+            const win = el("div", "victoire");
+            const wb = el("button", "pop-close", "Rejouer les feux 🎆");
+            wb.onclick = () => grandFinal();
+            const wc = el("button", "pop-close alt", "Fermer ✕");
+            wc.onclick = () => win.remove();
+            win.append(el("p", "pop-txt", "🏆 Bravo Papa ! Tu as atteint tes 80 ans avec " + score + " points ! 🎉"), wb, wc);
+            document.body.append(win);
             info.textContent = "🏆 Tu as gagné ! Bon anniversaire Papa !";
             return;
           }
@@ -558,7 +604,8 @@
           score = 0;
           serie = 0;
           vues.clear();
-          sudokuFait = false;
+          sudokus.forEach((s) => (s.fait = false));
+          document.querySelectorAll(".victoire").forEach((v) => v.remove());
           majHud();
           Object.keys(cells).forEach((k) => {
             cells[k].classList.remove("ouverte", "lit", "piege-hit");
