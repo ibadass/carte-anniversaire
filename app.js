@@ -148,17 +148,20 @@
         const conf = cfg.oie || {};
         const oies = new Set(conf.oies || []);
         const pieges = new Map((conf.pieges || []).map((p) => [p.case, p]));
+        const voitures = new Map((conf.voitures || []).map((v) => [v.case, v]));
+        const blagues = conf.humour || [];
         const dlg = document.createElement("dialog");
         dlg.className = "pop";
+        const humTxt = el("p", "pop-hum", "");
         const popTxt = el("p", "pop-txt", "");
         const close = el("button", "pop-close", "Continuer ✕");
         close.onclick = () => dlg.close();
-        dlg.append(popTxt, close);
-        let next = null;
+        dlg.append(humTxt, popTxt, close);
         dlg.addEventListener("close", () => { const f = next; next = null; f && f(); });
         document.body.append(dlg);
-        const say = (t) => new Promise((res) => {
+        const say = (t, hum = "") => new Promise((res) => {
           next = res;
+          humTxt.textContent = hum;
           popTxt.textContent = t;
           if (dlg.open) return;
           dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
@@ -171,8 +174,8 @@
           for (let c = 0; c < 10; c++) nums.push(row * 10 + c + 1);
           if (row % 2 === 1) nums.reverse();
           nums.forEach((n) => {
-            const kind = n === 80 ? " fin" : pieges.has(n) ? " piege" : oies.has(n) ? " oie" : "";
-            const ico = n === 80 ? "🏁" : pieges.has(n) ? "🕳️" : oies.has(n) ? "🪿" : "";
+            const kind = n === 80 ? " fin" : pieges.has(n) ? " piege" : oies.has(n) ? " oie" : voitures.has(n) ? " voiture" : "";
+            const ico = n === 80 ? "🏁" : pieges.has(n) ? "🕳️" : oies.has(n) ? "🪿" : voitures.has(n) ? "🚗" : "";
             const c = el("div", "cell" + kind);
             c.append(el("span", "num", String(n)), el("span", "ico", ico));
             cells[n] = c;
@@ -221,7 +224,8 @@
           cells[pos].classList.add("ouverte");
           lit(pos, "lit");
           flash();
-          if (d) await say(d.e + " " + d.t);
+          const hum = blagues.length ? "😂 " + blagues[(pos - 1) % blagues.length] : "";
+          if (d) await say(d.e + " " + d.t, hum);
         };
         const arrive = async () => {
           if (!pos) return;
@@ -240,6 +244,12 @@
             lit(pos, "piege-hit");
             await say("🕳️ Piège ! " + p.t);
             await move(Math.max(0, pos - p.recul));
+            return;
+          }
+          if (voitures.has(pos)) {
+            lit(pos, "lit");
+            flash();
+            await say("🚗 " + voitures.get(pos).nom + " !", "😂 La blague : on ne connaît plus l'ordre...");
             return;
           }
           if (oies.has(pos)) {

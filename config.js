@@ -8,7 +8,7 @@ window.CARTE_CONFIG = {
   message:
     "80 ans de sourires, de belles histoires et de tendresse. Tu es notre plus beau livre, et on n'a pas fini de te lire !",
   // Ordre et choix des modules : "calendrier", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"
-  modules: ["calendrier", "oie", "parcours", "proches", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"],
+  modules: ["oie"],
 
   // 80 cases à ouvrir (une par année). Le 80e déclenche le grand feu d'artifice.
   calendrier: [
@@ -97,6 +97,29 @@ window.CARTE_CONFIG = {
   // Le jeu de l'oie : 80 cases, pièges et oies bonus
   oie: {
     oies: [9, 18, 27, 36, 45, 54, 63, 72],
+    voitures: [
+      { case: 4, nom: "Renault R20" },
+      { case: 13, nom: "Renault R21" },
+      { case: 21, nom: "Peugeot 306" },
+      { case: 38, nom: "Citroën Xantia" },
+      { case: 47, nom: "Alfa Romeo 40" },
+      { case: 58, nom: "Volvo S40" },
+      { case: 66, nom: "Mercedes 340" },
+      { case: 75, nom: "BMW X1" },
+    ],
+    // Une blague par case ouverte (en boucle)
+    humour: [
+      "Les anciens disent : « c'est pas la voiture qui fait le conducteur ! »",
+      "Le GPS ? Très peu pour lui, il a son sens de l'orientation.",
+      "À 80 ans, on n'a pas besoin de deux airbags : on a déjà la sagesse.",
+      "Il paraît qu'on a eu cette voiture avant le téléphone portable !",
+      "Le klaxon, c'est pour dire bonjour à la boulangère.",
+      "Le plein d'essence, c'est sacré. Le plein de café aussi.",
+      "Un bon coup de volant, et on passe par la mémoire longue.",
+      "Tu as dit « je vais chercher le pain » ? Ça fait trois heures !",
+      "Les rideaux, les portes, les fruits... et on a encore oublié les clés !",
+      "Pas de panique : il n'y a que les voitures qui vieillissent mal.",
+    ],
     pieges: [
       { case: 7, recul: 3, t: "Une peau de banane sur le chemin ! Tu recules de 3 cases." },
       { case: 16, recul: 4, t: "Une averse surprise : retour de 4 cases pour se mettre à l'abri." },
