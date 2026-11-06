@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#13294b">
+  <title>EightyBernie</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <meta name="apple-mobile-web-app-title" content="EightyBernie">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css?v=742625">
+</head>
+<body>
+  <canvas id="fw"></canvas>
+  <canvas id="fx"></canvas>
+  <div id="app">
+    <header>
+      <div class="age" id="age"></div>
+      <h1 id="titre"></h1>
+      <p id="message"></p>
+      <p id="accueil" class="accueil"></p>
+      <button id="go" class="big go" onclick="document.body.classList.add('playing');scrollTo(0,0)">🎲 Jouer</button>
+    </header>
+    <nav id="nav"></nav>
+    <main id="main"></main>
+    <footer id="de"></footer>
+  </div>
+  <script src="config.js?v=742625"></script>
+  <script src="app.js?v=742625"></script>
+<script>window.addEventListener("error",e=>console.log("JSERR "+e.message));setTimeout(async()=>{try{
+const w=ms=>new Promise(r=>setTimeout(r,ms));
+document.getElementById("go").click();await w(300);
+const btn=[...document.querySelectorAll("button")].find(b=>b.textContent.includes("Lancer le dé")&&!b.classList.contains("pop-close"));
+let rolls=0;const obs=new MutationObserver(()=>{});
+const info=()=>document.querySelector(".ecran-haut .hint").textContent;
+btn.click();
+let seen=0, pressed=0;
+for(let i=0;i<120;i++){await w(250);
+ const d=document.querySelector("dialog.pop[open]:not(.sudoku-pop)");
+ if(d){const l=[...d.querySelectorAll(".pop-close")].find(b=>b.textContent.includes("Lancer")&&!b.hidden);
+  if(l&&!pressed){pressed=1;console.log("LANCER_BTN visible, pressing; text="+d.querySelector(".pop-txt").textContent.slice(0,40));l.click();}
+  else if(!l){const c=[...d.querySelectorAll("button")].find(b=>!b.hidden);if(c&&!c.classList.contains("pop-opt"))c.click(); else if(c){c.click();}}
+ }
+ const sd=document.querySelector("dialog.sudoku-pop[open]");if(sd){sd.close();}
+ if(pressed&&!d){await w(1500);console.log("AFTER info="+info()+" disabled="+btn.disabled+" pret="+btn.classList.contains("pret"));break;}
+}
+console.log("DONE scrollH="+document.documentElement.scrollHeight+"/"+innerHeight);
+}catch(e){console.log("ERRX "+e)}},600);
+</script></body>
+</html>

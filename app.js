@@ -218,13 +218,20 @@
         const dlg = document.createElement("dialog");
         dlg.className = "pop";
         const popTxt = el("p", "pop-txt", "");
-        const close = el("button", "pop-close", "Continuer ✕");
+        const close = el("button", "pop-close alt", "Continuer ✕");
         close.onclick = () => dlg.close();
+        // Raccourci : fermer la case et relancer le dé d'un seul geste
+        let veutLancer = false;
+        const lancer = el("button", "pop-close", "🎲 Lancer le dé");
+        lancer.onclick = () => { veutLancer = true; dlg.close(); };
+        const actions = el("div", "pop-actions");
+        actions.append(lancer, close);
+        const montrerActions = (v) => { close.hidden = !v; lancer.hidden = !v || pos >= 80; };
         const opts = el("div", "pop-opts");
         const popImg = el("img", "pop-img");
         popImg.hidden = true;
         popImg.onerror = () => { popImg.hidden = true; };
-        dlg.append(popImg, popTxt, opts, close);
+        dlg.append(popImg, popTxt, opts, actions);
         dlg.addEventListener("close", () => { const f = next; next = null; f && f(); });
         document.body.append(dlg);
         const say = (t) => new Promise((res) => {
@@ -232,7 +239,7 @@
           popTxt.textContent = t;
           opts.replaceChildren();
           popImg.hidden = true;
-          close.hidden = false;
+          montrerActions(true);
           if (dlg.open) return;
           dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
         });
@@ -301,10 +308,9 @@
           return a[0] % m;
         };
         const rnd6 = () => rnd(5) + 1;
-        const info = el("p", "hint", "Touche le dé ou le bouton. Objectif : la case 80 ! 🏁");
+        const info = el("p", "hint", "Touche le dé pour jouer. Objectif : la case 80 ! 🏁");
         let pos = 0;
         let busy = false;
-        let stageEl;
         const board = el("div", "board");
         const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
         const placePion = () => (pos ? cells[pos].append(pion) : depart.append(pion));
@@ -502,7 +508,7 @@
             const bonne = ch[0];
             const mel = ch.slice().sort(() => Math.random() - 0.5);
             const fini = say("❓ " + q.q);
-            close.hidden = true;
+            montrerActions(false);
             mel.forEach((txt) => {
               const b = el("button", "pop-opt", txt);
               b.onclick = () => {
@@ -513,7 +519,7 @@
                 if (txt !== bonne) b.classList.add("ko");
                 const ok = txt === bonne;
                 popTxt.textContent = (ok ? "✅ Bravo ! " : "❌ Raté ! ") + q.r;
-                close.hidden = false;
+                montrerActions(true);
                 if (!vues.has(n)) {
                   serie = ok ? serie + 1 : 0;
                   const bonus = ok && serie >= 2 ? 10 * Math.min(serie - 1, 5) : 0;
@@ -573,6 +579,8 @@
         btn.onclick = async () => {
           if (busy || pos === 80) return;
           busy = true;
+          veutLancer = false;
+          btn.classList.remove("pret");
           btn.disabled = true;
           lancers++;
           const bonus = rnd(8) === 0;
@@ -588,26 +596,23 @@
           de.classList.add("throw");
           await sleep(1900);
           if (bonus) {
-            board.scrollIntoView({ behavior: "smooth", block: "start" });
             await say("🃏 Joker de Papa ! Tu peux ouvrir 2 cases de ton choix, sans bouger ton pion (sauf l'arrivée).");
             for (let k = 1; k <= 2; k++) {
               info.textContent = "🃏 Touche la case à ouvrir (" + k + "/2)";
               const n = await choisir();
-              cells[n].scrollIntoView({ behavior: "smooth", block: "center" });
               await sleep(400);
               await arrive(n);
               rejouer = false;
               cells[n].classList.add("ouverte");
             }
-            stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
-            info.textContent = "📍 Case " + pos + " sur 80";
+            info.textContent = "📍 Case " + pos + " sur 80 · touche le dé 🎲";
             busy = false;
             btn.disabled = false;
+            await finDeTour();
             return;
           }
           let target = pos + r;
           if (target > 80) target = 160 - target;
-          cells[Math.min(target, 80)].scrollIntoView({ behavior: "smooth", block: "center" });
           const depuis = pos;
           await move(target);
           if (pos > depuis) gagner(2 * (pos - depuis), "En avance !");
@@ -620,16 +625,25 @@
             busy = false;
             btn.disabled = false;
             info.textContent = "🎲 Tu rejoues !";
-            stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
             await sleep(600);
             btn.onclick();
             return;
           }
-          stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
-          info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "📍 Case " + pos + " sur 80";
+          info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "📍 Case " + pos + " sur 80 · touche le dé 🎲";
           busy = false;
           btn.textContent = "🎲 Lancer le dé";
           btn.disabled = pos === 80;
+          await finDeTour();
+        };
+        const finDeTour = async () => {
+          if (pos >= 80) return;
+          if (veutLancer) {
+            veutLancer = false;
+            await sleep(500);
+            btn.onclick();
+          } else {
+            btn.classList.add("pret");
+          }
         };
         const raz = el("button", "big petit", "↺ Recommencer");
         raz.onclick = () => {
@@ -658,13 +672,17 @@
           btn.textContent = "🎲 Lancer le dé";
           cube.classList.add("idle");
         };
-        const stage = el("div", "stage");
         const row = el("div", "oie-bar");
         row.append(depart, raz);
-        stage.append(el("h2", "stage-t", "À toi de jouer, Papa !"), hud, de, btn, info, row);
-        board.append(el("h2", "stage-t", "Le plateau"), el("p", "hint", "Chaque case est à découvrir… 🤫"), plateau);
-        s.append(stage, board);
-        stageEl = stage;
+        // Un seul écran : score en haut, plateau au milieu, dé et boutons en bas
+        const haut = el("div", "ecran-haut");
+        haut.append(hud, info);
+        const bas = el("div", "ecran-bas");
+        const cmd = el("div", "cmd");
+        cmd.append(btn, row);
+        bas.append(de, cmd);
+        board.append(plateau);
+        s.append(haut, board, bas);
         placePion();
         majHud();
       },
