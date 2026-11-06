@@ -28,7 +28,17 @@ section.on { display: block; }
 .card b { font-size: 1.1rem; }
 .card small { font-size: .95rem; color: #555; }
 .card.bd { color: #fff; border: 3px solid #111; }
-.card.fait { opacity: .5; outline: 4px solid #f4c542; }
+@media (max-width: 500px) {
+  header { padding: 14px 14px 4px; }
+  header .photo { width: 120px; height: 120px; margin-bottom: 6px; }
+  header .age { font-size: 3.2rem; }
+  header h1 { font-size: 1.4rem; }
+  header p { font-size: 1rem; margin: 6px auto; }
+  nav button { font-size: 1rem; padding: 10px 14px; }
+  .case .face { font-size: 1.1rem; }
+  .cal { gap: 8px; }
+}
+
 .cal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 8px 0; }
 @media (min-width: 560px) { .cal { grid-template-columns: repeat(6, 1fr); } }
 .case { aspect-ratio: 1; width: 100%; padding: 0; border: 0; background: none; perspective: 600px; cursor: pointer; }

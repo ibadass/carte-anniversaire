@@ -132,12 +132,31 @@
           inner.append(el("div", "face", String(i + 1)), el("div", "back", d.e));
           c.append(inner);
           c.onclick = () => {
+            if (c.classList.contains("open")) return;
             c.classList.add("open");
             msg.textContent = d.e + " " + d.t;
+            if (i === cfg.calendrier.length - 1) spectacle(6000);
           };
           g.append(c);
         });
         s.append(g, msg);
+      },
+    },
+    passions: {
+      label: "⚽ Passions",
+      build(s) {
+        s.append(el("p", "hint", "Ses passions, en quatre cartes"));
+        const bulle = el("div", "bulle", "Touche une passion 👇");
+        s.append(bulle);
+        const g = el("div", "cards");
+        cfg.passions.forEach((p) => {
+          const c = el("button", "card bd");
+          c.style.background = p.couleur;
+          c.append(el("span", "e", p.emoji), el("b", "", p.titre));
+          c.onclick = () => { bulle.textContent = p.emoji + " " + p.phrase; };
+          g.append(c);
+        });
+        s.append(g);
       },
     },
     voyages: {
