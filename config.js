@@ -108,6 +108,12 @@ window.CARTE_CONFIG = {
         gage: "Gage : lève-toi, fais un bisou à chacun des membres de la table et glisse-leur dans l'oreille : « Ne jamais voter pour le diable ».",
       },
     ],
+    // Mini-sudoku 10x10 (blocs de 2 lignes x 5 colonnes, chiffres 0 à 9) : "." = case vide
+    sudoku: {
+      case: 13,
+      puzzle: ["5486.31729", "7.13...5.4", ".04.3798.2", "82.765.13.", "2.3.8.60.5", "...4...287", "31.092.648", ".87.40..91", "462.5.09..", ".301.82..6"],
+      solution: ["5486031729", "7913268504", "1045379862", "8297654130", "2739846015", "0564193287", "3150927648", "6872405391", "4628510973", "9301782456"],
+    },
     // Les cases libres alternent : blague, personne, blague, personne, musique
     blagues: [
       "À 80 ans, on n'est pas vieux : on est en édition collector, numérotée, et sans garantie constructeur. 🏆",

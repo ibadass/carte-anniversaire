@@ -249,3 +249,19 @@ header .go { width: 100%; max-width: 20rem; margin: 26px auto 8px; }
 .gain { position: fixed; left: 50%; top: 42%; transform: translateX(-50%); z-index: 60; padding: 10px 18px; border-radius: 99px; background: linear-gradient(180deg, #ffd95a, #f0a500); color: #13294b; font-weight: bold; font-size: 1.2rem; box-shadow: 0 6px 20px rgba(0,0,0,.4); pointer-events: none; white-space: nowrap; animation: gain 1.8s ease-out forwards; }
 @keyframes gain { 0% { opacity: 0; transform: translate(-50%, 20px) scale(.7); } 15% { opacity: 1; transform: translate(-50%, 0) scale(1.1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -70px); } }
 .gain.niveau { top: 28%; font-size: 1.4rem; background: linear-gradient(180deg, #ff9ecb, #e75480); color: #fff; animation-duration: 2.6s; }
+
+/* ---- Sudoku ---- */
+.cell.sudoku { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+.sudoku-pop { width: min(96vw, 430px); padding: 16px 10px 16px; }
+.sdk-msg { font-size: 1rem; font-weight: 600; margin: 0 0 10px; line-height: 1.35; }
+.sdk { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 0; border: 3px solid #13294b; border-radius: 8px; overflow: hidden; background: #13294b; }
+.sdk-c { aspect-ratio: 1; padding: 0; border: 0; border-right: 1px solid #a9c4e0; border-bottom: 1px solid #a9c4e0; background: #fff; color: #1f5f8b; font: bold 1.15rem system-ui, sans-serif; }
+.sdk-c.fixe { background: #e3ecf7; color: #13294b; }
+.sdk-c.bb { border-bottom: 2px solid #13294b; }
+.sdk-c.br { border-right: 2px solid #13294b; }
+.sdk-c.sel { background: #ffe08a; }
+.sdk-c.err { background: #fecaca; color: #b91c1c; }
+.sdk-pad { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 12px 0 8px; }
+.sdk-pad button { font: bold 1.2rem system-ui, sans-serif; padding: 10px 0; border-radius: 10px; border: 2px solid #13294b; background: #fff; color: #13294b; box-shadow: 0 3px 0 rgba(19,41,75,.35); }
+.sdk-pad button.wide { grid-column: span 2; }
+.pop-close.alt { background: transparent; color: #13294b; box-shadow: none; border: 2px solid #13294b; margin-left: 8px; }
