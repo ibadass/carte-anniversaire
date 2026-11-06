@@ -229,7 +229,9 @@
             };
           });
         });
-        de.append(cube);
+        const tilt = el("div", "tilt");
+        tilt.append(cube);
+        de.append(tilt);
         const cubeAt = { x: 0, y: 0 };
         const SHOW = { 1: [0, 0], 6: [0, 180], 3: [0, -90], 4: [0, 90], 2: [-90, 0], 5: [90, 0] };
         const btn = el("button", "big", "🚀 Démarrer le jeu");
