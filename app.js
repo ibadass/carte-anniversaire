@@ -124,7 +124,14 @@
       label: "📅 Calendrier",
       build(s) {
         s.append(el("p", "hint", "Touche une case pour ouvrir ton cadeau du jour 🎁"));
-        const msg = el("div", "bulle", "Ouvre une case pour découvrir le message !");
+        const dlg = document.createElement("dialog");
+        dlg.className = "pop";
+        const popTxt = el("p", "pop-txt", "");
+        const close = el("button", "pop-close", "Fermer ✕");
+        close.onclick = () => dlg.close();
+        dlg.append(popTxt, close);
+        dlg.addEventListener("click", (e) => e.target === dlg && dlg.close());
+        document.body.append(dlg);
         const g = el("div", "cal");
         cfg.calendrier.forEach((d, i) => {
           const c = el("button", "case");
@@ -132,14 +139,27 @@
           inner.append(el("div", "face", String(i + 1)), el("div", "back", d.e));
           c.append(inner);
           c.onclick = () => {
-            if (c.classList.contains("open")) return;
-            c.classList.add("open");
-            msg.textContent = d.e + " " + d.t;
+            if (!c.classList.contains("open")) c.classList.add("open");
+            popTxt.textContent = d.e + " " + d.t;
+            dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
             if (i === cfg.calendrier.length - 1) spectacle(6000);
           };
           g.append(c);
         });
-        s.append(g, msg);
+        s.append(g);
+      },
+    },
+    parcours: {
+      label: "🧭 Parcours",
+      build(s) {
+        s.append(el("p", "hint", cfg.ne || ""));
+        const list = el("div", "frise");
+        (cfg.parcours || []).forEach((p) => {
+          const c = el("div", "etape");
+          c.append(el("span", "e", p.emoji), el("small", "", p.annee), el("b", "", p.titre), el("p", "", p.texte));
+          list.append(c);
+        });
+        s.append(list);
       },
     },
     passions: {

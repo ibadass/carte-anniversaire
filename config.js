@@ -8,7 +8,7 @@ window.CARTE_CONFIG = {
   message:
     "80 ans de sourires, de belles histoires et de tendresse. Tu es notre plus beau livre, et on n'a pas fini de te lire !",
   // Ordre et choix des modules : "calendrier", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"
-  modules: ["calendrier", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"],
+  modules: ["calendrier", "parcours", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"],
 
   // 80 cases à ouvrir (une par année). Le 80e déclenche le grand feu d'artifice.
   calendrier: [
@@ -92,6 +92,18 @@ window.CARTE_CONFIG = {
     { e: "🍃", t: "Une promenade sous les feuilles, un pas tranquille." },
     { e: "🎵", t: "Une mélodie douce pour une journée de fête." },
     { e: "🎆", t: "Le grand final : bon anniversaire Papa, on t'aime !" },
+  ],
+
+  // Son parcours de vie
+  ne: "Né le 6 novembre 1946 à Paris",
+  parcours: [
+    { annee: "1946", titre: "Naissance à Paris", emoji: "👶", texte: "Le 6 novembre 1946, tout commence à Paris." },
+    { annee: "Lycée", titre: "Lycée de Mongeron", emoji: "🎒", texte: "Les années de lycée au lycée de Mongeron." },
+    { annee: "Études", titre: "Écoles des Mines de Nancy", emoji: "🎓", texte: "Une formation d'ingénieur aux Écoles des Mines de Nancy." },
+    { annee: "Service", titre: "L'armée", emoji: "🎖️", texte: "Le temps du service militaire." },
+    { annee: "Début", titre: "Premier emploi : Saint-Gobain", emoji: "🏭", texte: "Le premier emploi, chez Saint-Gobain." },
+    { annee: "Carrière", titre: "Entreprise Bull", emoji: "💻", texte: "Bull, les « 1000 métiers » : une carrière riche et passionnante." },
+    { annee: "Aujourd'hui", titre: "La retraite... mais toujours là !", emoji: "🌟", texte: "Il s'occupe de maman et il est au top !" },
   ],
 
   // Ses passions
