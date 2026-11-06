@@ -203,24 +203,20 @@
         const pion = el("span", "pion", "👴");
         const de = el("div", "scene");
         const cube = el("div", "cube");
-        const faces = ["⚀", "⚅", "⚂", "⚃", "⚁", "⚄"];
+        const PIPS = { f1: [4], f2: [0, 8], f3: [0, 4, 8], f4: [0, 2, 6, 8], f5: [0, 2, 4, 6, 8] };
         const faceEl = {};
-        ["f1", "f6", "f3", "f4", "f2", "f5"].forEach((cls, i) => {
-          faceEl[cls] = el("div", "face " + cls, faces[i]);
-          cube.append(faceEl[cls]);
+        ["f1", "f6", "f3", "f4", "f2", "f5"].forEach((cls) => {
+          const f = el("div", "face " + cls);
+          if (PIPS[cls]) {
+            for (let k = 0; k < 9; k++) f.append(el("i", PIPS[cls].includes(k) ? "pip" : ""));
+            f.classList.add("pips");
+          }
+          faceEl[cls] = f;
+          cube.append(f);
         });
         const f6 = faceEl.f6;
-        const pipsF6 = f6.textContent;
-        const photoOn = () => {
-          f6.textContent = "";
-          f6.classList.add("photo-face");
-          if (cfg.photo) f6.style.backgroundImage = "url(" + cfg.photo + ")";
-        };
-        const photoOff = () => {
-          f6.textContent = pipsF6;
-          f6.classList.remove("photo-face");
-          f6.style.backgroundImage = "";
-        };
+        f6.classList.add("photo-face");
+        if (cfg.photo) f6.style.backgroundImage = "url(" + cfg.photo + ")";
         let lancers = 0;
         const choisir = () => new Promise((res) => {
           Object.keys(cells).forEach((k) => {
@@ -237,7 +233,6 @@
         const SHOW = { 1: [0, 0], 6: [0, 180], 3: [0, -90], 4: [0, 90], 2: [-90, 0], 5: [90, 0] };
         const btn = el("button", "big", "🚀 Démarrer le jeu");
         cube.classList.add("idle");
-        photoOn();
         const rnd = (m) => {
           const a = new Uint32Array(1);
           const lim = 4294967296 - (4294967296 % m);
