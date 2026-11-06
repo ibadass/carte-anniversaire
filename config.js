@@ -8,7 +8,7 @@ window.CARTE_CONFIG = {
   message:
     "80 ans de sourires, de belles histoires et de tendresse. Tu es notre plus beau livre, et on n'a pas fini de te lire !",
   // Ordre et choix des modules : "feux", "bisous", "livres", "bd", "voeux"
-  modules: ["feux", "bisous", "livres", "bd", "western", "voeux"],
+  modules: ["voyages", "bd", "western", "livres", "bisous", "feux", "voeux"],
   livres: [
     { titre: "Le Petit Prince", auteur: "Saint-Exupéry", emoji: "🌹" },
     { titre: "Les Misérables", auteur: "Victor Hugo", emoji: "📕" },
@@ -18,6 +18,18 @@ window.CARTE_CONFIG = {
     { titre: "Maigret", auteur: "Georges Simenon", emoji: "🕵️" },
     { titre: "Bonjour tristesse", auteur: "Françoise Sagan", emoji: "🌊" },
     { titre: "Le Rouge et le Noir", auteur: "Stendhal", emoji: "🎭" },
+  ],
+  voyages: [
+    { lieu: "Bruxelles", emoji: "🧇", ref: "Le départ de tout : Hergé et son Tintin" },
+    { lieu: "Congo", emoji: "🦁", ref: "Tintin au Congo" },
+    { lieu: "New York", emoji: "🗽", ref: "Tintin en Amérique" },
+    { lieu: "Chine", emoji: "🐉", ref: "Le Lotus bleu" },
+    { lieu: "Égypte", emoji: "🏺", ref: "Blake et Mortimer : Le Mystère de la Grande Pyramide" },
+    { lieu: "Écosse", emoji: "🏴", ref: "Tintin et l'Île Noire" },
+    { lieu: "Tibet", emoji: "🏔️", ref: "Tintin au Tibet" },
+    { lieu: "Far West", emoji: "🤠", ref: "Lucky Luke, bien sûr !" },
+    { lieu: "La Lune", emoji: "🌕", ref: "Objectif Lune et On a marché sur la Lune" },
+    { lieu: "Retour à la maison", emoji: "🏠", ref: "Le tour est joué, bienvenue chez toi !" },
   ],
   bd: [
     { titre: "Tintin", auteur: "Hergé 🇧🇪", emoji: "🐕", couleur: "#2b6cb0", phrase: "Mille milliards de mille sabords !" },

@@ -64,7 +64,6 @@
     fwTimer = setInterval(show, 450);
     setTimeout(() => clearInterval(fwTimer), ms);
   }
-  addEventListener("pointerdown", (e) => { if (e.target.closest("[data-fw]")) return; burst(e.clientX, e.clientY); });
 
   // ---------- Bisous (pluie de cœurs) ----------
   const fx = $("#fx"), xctx = fx.getContext("2d");
@@ -98,7 +97,6 @@
         b.dataset.fw = 1; b.onclick = () => spectacle(8000);
         s.append(b);
       },
-      enter() { spectacle(5000); },
     },
     bisous: {
       label: "😘 Bisous",
@@ -108,7 +106,6 @@
         b.dataset.fw = 1; b.onclick = () => kisses(30);
         s.append(b);
       },
-      enter() { kisses(25); },
     },
     livres: {
       label: "📚 Livres",
@@ -118,6 +115,26 @@
         cfg.livres.forEach((l) => {
           const c = el("div", "card");
           c.append(el("span", "e", l.emoji), el("b", "", l.titre), el("small", "", l.auteur));
+          g.append(c);
+        });
+        s.append(g);
+      },
+    },
+    voyages: {
+      label: "🌍 Voyages",
+      build(s) {
+        const total = cfg.voyages.length;
+        const info = el("p", "hint", "Tour du monde : touche une étape pour la cocher ✅");
+        s.append(info);
+        const g = el("div", "cards");
+        cfg.voyages.forEach((v) => {
+          const c = el("button", "card");
+          c.append(el("span", "e", v.emoji), el("b", "", v.lieu), el("small", "", v.ref));
+          c.onclick = () => {
+            c.classList.toggle("fait");
+            const n = g.querySelectorAll(".fait").length;
+            info.textContent = n === total ? "🎉 Tour du monde terminé !" : `${n} / ${total} étapes parcourues`;
+          };
           g.append(c);
         });
         s.append(g);
@@ -134,7 +151,7 @@
           const c = el("button", "card bd");
           c.style.background = b.couleur;
           c.append(el("span", "e", b.emoji), el("b", "", b.titre), el("small", "", b.auteur));
-          c.onclick = () => { bulle.textContent = b.emoji + " " + b.phrase; burst(innerWidth / 2, innerHeight / 3); };
+          c.onclick = () => { bulle.textContent = b.emoji + " " + b.phrase; };
           g.append(c);
         });
         s.append(g);
@@ -151,7 +168,7 @@
           const c = el("button", "card bd");
           c.style.background = w.couleur;
           c.append(el("span", "e", w.emoji), el("b", "", w.titre), el("small", "", w.annee + " · " + w.acteur));
-          c.onclick = () => { bulle.textContent = w.emoji + " " + w.phrase; kisses(12); };
+          c.onclick = () => { bulle.textContent = w.emoji + " " + w.phrase; };
           g.append(c);
         });
         s.append(g);
@@ -161,11 +178,10 @@
       label: "💌 Vœux",
       build(s) {
         cfg.voeux.forEach((v) => s.append(el("div", "voeu", v)));
-        const b = el("button", "big", "🎉 Tout en même temps !");
-        b.dataset.fw = 1; b.onclick = () => { spectacle(8000); kisses(40); };
+        const b = el("button", "big", "💋 Une pluie de bisous !");
+        b.dataset.fw = 1; b.onclick = () => kisses(30);
         s.append(b);
       },
-      enter() { kisses(15); },
     },
   };
 
@@ -188,5 +204,4 @@
     tabs[m] = { b, s };
   });
   if (active.length) { tabs[active[0]].b.classList.add("on"); tabs[active[0]].s.classList.add("on"); }
-  setTimeout(() => spectacle(4000), 500);
 })();
