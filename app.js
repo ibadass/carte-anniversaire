@@ -254,7 +254,12 @@
         lancer.onclick = () => { veutLancer = true; dlg.close(); };
         const actions = el("div", "pop-actions");
         actions.append(lancer, close);
-        const montrerActions = (v) => { close.hidden = !v; lancer.hidden = !v || pos >= 80; };
+        // "les deux" (question), "lancer" (fin de tour) ou "suite" (d'autres messages suivent) ; false = rien
+        const montrerActions = (mode) => {
+          const peutLancer = pos < 80;
+          lancer.hidden = !mode || mode === "suite" || !peutLancer;
+          close.hidden = !mode || (mode === "lancer" && peutLancer);
+        };
         const opts = el("div", "pop-opts");
         const popImg = el("img", "pop-img");
         popImg.hidden = true;
@@ -262,12 +267,12 @@
         dlg.append(popImg, popTxt, opts, actions);
         dlg.addEventListener("close", () => { const f = next; next = null; f && f(); });
         document.body.append(dlg);
-        const say = (t) => new Promise((res) => {
+        const say = (t, mode = "lancer") => new Promise((res) => {
           next = res;
           popTxt.textContent = t;
           opts.replaceChildren();
           popImg.hidden = true;
-          montrerActions(true);
+          montrerActions(mode);
           if (dlg.open) return;
           dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
         });
@@ -513,7 +518,7 @@
             premiere(n, 15, "Courage, piège relevé !");
             cells[n].classList.add("ouverte", "piege-hit");
             flash(true);
-            await say(p.e + " " + p.titre);
+            await say(p.e + " " + p.titre, "suite");
             await say(p.gage);
             return;
           }
@@ -548,7 +553,7 @@
                 const ok = txt === bonne;
                 if (ok) heartBoom();
                 popTxt.textContent = (ok ? "✅ Bravo ! " : "❌ Raté ! ") + q.r;
-                montrerActions(true);
+                montrerActions("les deux");
                 if (!vues.has(n)) {
                   serie = ok ? serie + 1 : 0;
                   const bonus = ok && serie >= 2 ? 10 * Math.min(serie - 1, 5) : 0;
@@ -560,7 +565,7 @@
             await fini;
             return;
           }
-          await say("❓ " + q.q);
+          await say("❓ " + q.q, "suite");
           await say("💡 " + q.r);
         };
         const decouvrir = (n) => {
@@ -625,7 +630,7 @@
           de.classList.add("throw");
           await sleep(1900);
           if (bonus) {
-            await say("🃏 Joker de Papa ! Tu peux ouvrir 2 cases de ton choix, sans bouger ton pion (sauf l'arrivée).");
+            await say("🃏 Joker de Papa ! Tu peux ouvrir 2 cases de ton choix, sans bouger ton pion (sauf l'arrivée).", "suite");
             for (let k = 1; k <= 2; k++) {
               info.textContent = "🃏 Touche la case à ouvrir (" + k + "/2)";
               const n = await choisir();
