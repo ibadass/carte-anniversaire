@@ -246,7 +246,7 @@
         const dlg = document.createElement("dialog");
         dlg.className = "pop";
         const popTxt = el("p", "pop-txt", "");
-        const close = el("button", "pop-close alt", "Continuer ✕");
+        const close = el("button", "pop-close alt", "Continuer");
         close.onclick = () => dlg.close();
         // Raccourci : fermer la case et relancer le dé d'un seul geste
         let veutLancer = false;
@@ -493,7 +493,7 @@
             if (!bad.size && !vide) {
               S.fait = true;
               msg.textContent = "🎉 Sudoku réussi, bravo Papa !";
-              verif.textContent = "Continuer ✕";
+              verif.textContent = "Continuer";
               quitter.hidden = true;
               flash();
               gagner(N === 15 ? 200 : 100, "Sudoku résolu !");
