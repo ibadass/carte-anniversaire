@@ -168,12 +168,15 @@
         const popTxt = el("p", "pop-txt", "");
         const close = el("button", "pop-close", "Continuer ✕");
         close.onclick = () => dlg.close();
-        dlg.append(popTxt, close);
+        const opts = el("div", "pop-opts");
+        dlg.append(popTxt, opts, close);
         dlg.addEventListener("close", () => { const f = next; next = null; f && f(); });
         document.body.append(dlg);
         const say = (t) => new Promise((res) => {
           next = res;
           popTxt.textContent = t;
+          opts.replaceChildren();
+          close.hidden = false;
           if (dlg.open) return;
           dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
         });
@@ -219,7 +222,6 @@
           f6.style.backgroundImage = "";
         };
         let lancers = 0;
-        const EVERY = 5;
         const choisir = () => new Promise((res) => {
           Object.keys(cells).forEach((k) => {
             if (+k === 80) return;
@@ -235,11 +237,14 @@
         const SHOW = { 1: [0, 0], 6: [0, 180], 3: [0, -90], 4: [0, 90], 2: [-90, 0], 5: [90, 0] };
         const btn = el("button", "big", "🚀 Démarrer le jeu");
         cube.classList.add("idle");
-        const rnd6 = () => {
+        photoOn();
+        const rnd = (m) => {
           const a = new Uint32Array(1);
-          do crypto.getRandomValues(a); while (a[0] >= 4294967292); // évite le biais du modulo
-          return (a[0] % 6) + 1;
+          const lim = 4294967296 - (4294967296 % m);
+          do crypto.getRandomValues(a); while (a[0] >= lim); // évite le biais du modulo
+          return a[0] % m;
         };
+        const rnd6 = () => rnd(5) + 1;
         const info = el("p", "hint", "Atteins la case 80 pour fêter tes 80 ans !");
         let pos = 0;
         let busy = false;
@@ -290,6 +295,28 @@
           cells[n].classList.add("ouverte");
           lit(n, "lit");
           flash();
+          const ch = (conf.choix || {})[n];
+          if (ch) {
+            const bonne = ch[0];
+            const mel = ch.slice().sort(() => Math.random() - 0.5);
+            const fini = say("❓ " + q.q);
+            close.hidden = true;
+            mel.forEach((txt) => {
+              const b = el("button", "pop-opt", txt);
+              b.onclick = () => {
+                opts.querySelectorAll("button").forEach((x) => {
+                  x.disabled = true;
+                  if (x.textContent === bonne) x.classList.add("ok");
+                });
+                if (txt !== bonne) b.classList.add("ko");
+                popTxt.textContent = (txt === bonne ? "✅ Bravo ! " : "❌ Raté ! ") + q.r;
+                close.hidden = false;
+              };
+              opts.append(b);
+            });
+            await fini;
+            return;
+          }
           await say("❓ " + q.q);
           await say("💡 " + q.r);
         };
@@ -322,9 +349,8 @@
           busy = true;
           btn.disabled = true;
           lancers++;
-          const bonus = lancers % EVERY === 0;
+          const bonus = rnd(8) === 0;
           const r = bonus ? 6 : rnd6();
-          if (bonus) photoOn();
           cube.classList.remove("idle");
           void cube.offsetWidth;
           const [tx, ty] = SHOW[r];
@@ -346,7 +372,6 @@
             flash();
             await sleep(500);
             await arrive(pos);
-            photoOff();
             stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
             info.textContent = "Case " + pos + " / 80";
             busy = false;
@@ -359,8 +384,7 @@
           await move(target);
           await arrive(pos);
           stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
-          const reste = EVERY - (lancers % EVERY);
-          info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "Case " + pos + " / 80 · ✨ face magique dans " + reste + " lancer" + (reste > 1 ? "s" : "");
+          info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "Case " + pos + " / 80 · ✨ face magique : 1 chance sur 8 à chaque lancer";
           busy = false;
           btn.textContent = "🎲 Lancer le dé";
           btn.disabled = pos === 80;

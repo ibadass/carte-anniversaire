@@ -152,3 +152,7 @@ body.playing main { animation: fade .5s; }
 @keyframes choix { to { box-shadow: 0 0 10px 3px #f4c542; transform: scale(1.12); } }
 .cell.cache { background: linear-gradient(135deg, #4a6fa5, #2f4f7f); }
 .cell.cache .ico { opacity: .85; }
+.pop-opts { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+.pop-opt { font: inherit; font-weight: bold; font-size: 1.1rem; padding: 12px; border-radius: 14px; border: 2px solid #13294b; background: #fff; color: #13294b; }
+.pop-opt.ok { background: #38a169; color: #fff; border-color: #38a169; }
+.pop-opt.ko { background: #e53e3e; color: #fff; border-color: #e53e3e; }
