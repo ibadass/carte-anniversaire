@@ -150,3 +150,5 @@ body.playing main { animation: fade .5s; }
 .cube .face.photo-face { background-size: cover; background-position: center 25%; }
 .cell.choix { cursor: pointer; animation: choix .8s ease-in-out infinite alternate; }
 @keyframes choix { to { box-shadow: 0 0 10px 3px #f4c542; transform: scale(1.12); } }
+.cell.cache { background: linear-gradient(135deg, #4a6fa5, #2f4f7f); }
+.cell.cache .ico { opacity: .85; }

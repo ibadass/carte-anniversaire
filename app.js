@@ -188,8 +188,9 @@
             const lib = libres.get(n);
             const kind = n === 80 ? " fin" : pieges.has(n) ? " piege" : cadeaux.has(n) ? " cadeau" : questions.has(n) ? " question" : lib ? " " + lib.kind : "";
             const ico = n === 80 ? "🏁" : pieges.has(n) ? pieges.get(n).e : cadeaux.has(n) ? "🎁" : questions.has(n) ? "❓" : lib ? { blague: "😂", personnes: "👪", musiques: "🎵" }[lib.kind] : "";
-            const c = el("div", "cell" + kind);
-            c.append(el("span", "num", String(n)), el("span", "ico", ico));
+            const c = el("div", "cell" + kind + (n === 80 ? "" : " cache"));
+            c._ico = ico;
+            c.append(el("span", "num", String(n)), el("span", "ico", n === 80 ? ico : "❔"));
             cells[n] = c;
             plateau.append(c);
           });
@@ -292,7 +293,12 @@
           await say("❓ " + q.q);
           await say("💡 " + q.r);
         };
+        const decouvrir = (n) => {
+          cells[n].classList.remove("cache");
+          cells[n].querySelector(".ico").textContent = cells[n]._ico;
+        };
         const arrive = async (n) => {
+          decouvrir(n);
           if (n === 80) {
             cells[80].classList.add("ouverte");
             lit(80, "lit");
@@ -364,7 +370,13 @@
           if (busy) return;
           pos = 0;
           lancers = 0;
-          Object.values(cells).forEach((c) => c.classList.remove("ouverte", "lit", "piege-hit"));
+          Object.keys(cells).forEach((k) => {
+            cells[k].classList.remove("ouverte", "lit", "piege-hit");
+            if (+k !== 80) {
+              cells[k].classList.add("cache");
+              cells[k].querySelector(".ico").textContent = "❔";
+            }
+          });
           placePion();
           info.textContent = "Atteins la case 80 pour fêter tes 80 ans !";
           btn.disabled = false;
@@ -375,7 +387,7 @@
         const row = el("div", "oie-bar");
         row.append(depart, raz);
         stage.append(el("h2", "stage-t", "À toi de jouer, Papa !"), de, btn, info, row);
-        board.append(el("h2", "stage-t", "Le plateau"), plateau);
+        board.append(el("h2", "stage-t", "Le plateau"), el("p", "hint", "Chaque case est à découvrir… 🤫"), plateau);
         s.append(stage, board);
         stageEl = stage;
         placePion();
