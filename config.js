@@ -2,7 +2,7 @@
 window.CARTE_CONFIG = {
   nom: "Papa",
   age: 80,
-  photo: "papa.jpg", // mettre "" pour masquer la photo
+  photo: "IMG_8596.jpeg", // mettre "" pour masquer la photo
 
   de: "Ta famille qui t'aime",
   message:
