@@ -205,6 +205,7 @@
         const cube = el("div", "cube");
         const PIPS = { f1: [4], f2: [0, 8], f3: [0, 4, 8], f4: [0, 2, 6, 8], f5: [0, 2, 4, 6, 8] };
         const faceEl = {};
+        ["c1", "c2", "c3", "c4", "c5", "c6"].forEach((cls) => cube.append(el("div", "core " + cls)));
         ["f1", "f6", "f3", "f4", "f2", "f5"].forEach((cls) => {
           const f = el("div", "face " + cls);
           if (PIPS[cls]) {
