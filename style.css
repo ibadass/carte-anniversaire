@@ -348,3 +348,11 @@ body.playing .cell .ico { font-size: clamp(.8rem, 4vw, 1.15rem); }
 .ecran-bas .oie-bar { flex-direction: column; align-items: stretch; gap: 8px; }
 .ecran-bas .oie-bar .depart { justify-content: center; }
 @media (max-height: 640px) { .ecran-bas .scene { width: 84px; height: 84px; } .ecran-bas .tilt { margin: -33px; transform: scale(.52) rotateX(-16deg) rotateY(-24deg); } }
+
+/* ---- Bonne réponse : cœur + BOOM ! (popover = au-dessus des fenêtres) ---- */
+#fw[popover] { margin: 0; padding: 0; border: 0; background: transparent; width: 100%; height: 100%; inset: 0; overflow: visible; }
+.boom[popover] { margin: 0; padding: 0; border: 0; background: transparent; color: #fff; inset: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; overflow: hidden; }
+.boom span { font-size: 7rem; line-height: 1; animation: boomHeart 1.6s ease-out forwards; filter: drop-shadow(0 0 20px #ff4d94); }
+.boom b { font-size: 3.4rem; color: #ffd95a; letter-spacing: 2px; text-shadow: 0 0 18px #ff4d94, 0 4px 0 #b3004d; animation: boomText 1.6s ease-out forwards; }
+@keyframes boomHeart { 0% { transform: scale(.2); opacity: 0; } 25% { transform: scale(1.5); opacity: 1; } 45% { transform: scale(1.1); } 100% { transform: scale(1.25); opacity: 0; } }
+@keyframes boomText { 0% { transform: scale(.3) rotate(-8deg); opacity: 0; } 25% { transform: scale(1.3) rotate(4deg); opacity: 1; } 100% { transform: scale(1.1) rotate(0); opacity: 0; } }

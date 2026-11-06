@@ -59,6 +59,34 @@
   function show() {
     burst(innerWidth * (0.15 + Math.random() * 0.7), innerHeight * (0.1 + Math.random() * 0.4));
   }
+  // Bonne réponse : feu d'artifice en forme de cœur + « BOOM ! », affichés par-dessus la fenêtre de question
+  function heartBurst(x, y, taille) {
+    const n = 90;
+    for (let i = 0; i < n; i++) {
+      const t = (Math.PI * 2 * i) / n, s = taille * (0.9 + Math.random() * 0.2);
+      const hx = 16 * Math.sin(t) ** 3;
+      const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+      parts.push({ x, y, vx: hx * s, vy: hy * s - 0.4, life: 80 + Math.random() * 20, h: 330 + Math.random() * 30 });
+    }
+  }
+  function heartBoom() {
+    const top = (el) => { el.setAttribute("popover", "manual"); el.showPopover && el.showPopover(); };
+    const fin = (el, rm) => { try { el.hidePopover && el.hidePopover(); } catch (e) {} rm ? el.remove() : el.removeAttribute("popover"); };
+    top(fw);
+    const b = document.createElement("div");
+    b.className = "boom";
+    b.innerHTML = "<span>💖</span><b>BOOM !</b>";
+    document.body.append(b);
+    top(b);
+    const w = innerWidth, h = innerHeight;
+    heartBurst(w / 2, h * 0.38, 0.3);
+    setTimeout(() => heartBurst(w * 0.2, h * 0.25, 0.17), 250);
+    setTimeout(() => heartBurst(w * 0.8, h * 0.25, 0.17), 450);
+    setTimeout(show, 150); setTimeout(show, 350); setTimeout(show, 600);
+    if (navigator.vibrate) navigator.vibrate([40, 40, 80]);
+    setTimeout(() => fin(b, true), 1700);
+    setTimeout(() => fin(fw, false), 3200);
+  }
   function spectacle(ms) {
     clearInterval(fwTimer);
     show();
@@ -518,6 +546,7 @@
                 });
                 if (txt !== bonne) b.classList.add("ko");
                 const ok = txt === bonne;
+                if (ok) heartBoom();
                 popTxt.textContent = (ok ? "✅ Bravo ! " : "❌ Raté ! ") + q.r;
                 montrerActions(true);
                 if (!vues.has(n)) {
