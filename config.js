@@ -1,9 +1,10 @@
 // Personnalise la carte ici (ou via l'URL : ?nom=Roger&age=80&modules=calendrier,passions)
 window.CARTE_CONFIG = {
   nom: "Papa",
+  titre: "Le tour du monde en 80 ans",
   age: 80,
   photo: "IMG_8596.jpeg", // mettre "" pour masquer la photo
-  de: "Claudine, Florence, Dominique, François et toute la tribu",
+  de: "Claudine, Florence, Dominique, François, Philippe, Nicole, Olivier, Claire et toute la tribu",
   message:
     "80 ans de sourires, de belles histoires et de tendresse. Tu es notre plus beau livre, et on n'a pas fini de te lire !",
   // Ordre et choix des modules : "calendrier", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"
@@ -24,7 +25,7 @@ window.CARTE_CONFIG = {
     { e: "🌷", t: "Pour Odette et Roger, tes parents : merci de t'avoir donné le goût de la vie." },
     { e: "🥾", t: "La marche : un pas après l'autre, les plus beaux chemins t'attendent." },
     { e: "🌲", t: "Des sentiers, des forêts et des vues à couper le souffle pour tes prochaines balades." },
-    { e: "👟", t: "Une bonne paire de chaussures, et le monde est à toi." },
+    { e: "🧑", t: "Pour Olivier, ton neveu : un grand merci pour ta présence et ta bonne humeur." },
     { e: "🍷", t: "Les amis : ceux qui refont le monde autour d'un café, avec des idées bien trempées !" },
     { e: "🥂", t: "Un verre entre amis, ça se savoure toujours." },
     { e: "👥", t: "Des amis fidèles, c'est le plus beau des trésors." },
@@ -82,12 +83,12 @@ window.CARTE_CONFIG = {
     { e: "🎉", t: "Le 80e anniversaire de Papa : une fête historique !" },
     { e: "💛", t: "Florence, Dominique et François t'embrassent fort." },
     { e: "🥰", t: "Matthieu, Juliette, Camille, Nans, Elizabeth et Maël t'embrassent fort !" },
-    { e: "📖", t: "Une histoire à écrire : la tienne continue !" },
-    { e: "💭", t: "Un souvenir pour chaque année vécue." },
+    { e: "👧", t: "Pour Claire, ta nièce : un bisou et plein de jolis souvenirs à partager." },
+    { e: "👬", t: "Pour Philippe, ton petit frère : une complicité qui dure depuis toujours." },
     { e: "🌠", t: "Une étoile filante pour exaucer tes vœux." },
     { e: "🥳", t: "Une danse, une fête, une nuit de rêve." },
     { e: "❤️", t: "Tu es le plus beau des cadeaux de notre famille." },
-    { e: "🌻", t: "Des tournesols plein le jardin, comme un soleil à toi." },
+    { e: "💐", t: "Pour Nicole, la femme de Philippe : des fleurs et toute notre affection." },
     { e: "🍃", t: "Une promenade sous les feuilles, un pas tranquille." },
     { e: "🎵", t: "Une mélodie douce pour une journée de fête." },
     { e: "🎆", t: "Le grand final : bon anniversaire Papa, on t'aime !" },

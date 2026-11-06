@@ -14,7 +14,7 @@
     $("#age").before(img);
   }
   $("#age").textContent = cfg.age;
-  $("#titre").textContent = "Joyeux anniversaire " + cfg.nom + " ! 🎂";
+  $("#titre").textContent = cfg.titre || "Joyeux anniversaire " + cfg.nom + " ! 🎂";
   $("#message").textContent = cfg.message;
   $("#de").textContent = "Avec tout notre amour, " + cfg.de + " 💝";
   document.title = "Joyeux anniversaire " + cfg.nom + " !";
