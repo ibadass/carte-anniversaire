@@ -77,6 +77,8 @@ footer { text-align: center; padding: 16px; font-size: 1.1rem; }
 .cell .ico { font-size: .9rem; line-height: 1; }
 .cell.piege { background: linear-gradient(135deg, #7b1e1e, #c53030); }
 .cell.oie { background: linear-gradient(135deg, #ecc94b, #d69e2e); color: #13294b; }
+.cell.cadeau { background: linear-gradient(135deg, #e53e3e, #9b2c2c); color: #fff; }
+.cell.question { background: linear-gradient(135deg, #3182ce, #2b6cb0); color: #fff; }
 .cell.fin { background: linear-gradient(135deg, #f6e05e, #f4c542); color: #13294b; font-size: .9rem; }
 .cell.ouverte { outline: 2px solid #f4c542; }
 .cell.lit::before { content: ""; position: absolute; inset: -40%; border-radius: 50%; background: repeating-conic-gradient(from 0deg, rgba(255,235,150,.9) 0 6deg, transparent 6deg 18deg); animation: rays 1s ease-out forwards; pointer-events: none; z-index: 2; }
