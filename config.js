@@ -1,7 +1,7 @@
 // Personnalise la carte ici (ou via l'URL : ?nom=Roger&age=80&modules=calendrier,passions)
 window.CARTE_CONFIG = {
   nom: "Papa",
-  titre: "EightyBernie",
+  titre: "Le tour du monde en 80 ans",
   accueil: "Bonjour Bernard et bon anniversaire ! Je vous souhaite une belle expérience...!",
   age: 80,
   photo: "IMG_8596.jpeg", // mettre "" pour masquer la photo
