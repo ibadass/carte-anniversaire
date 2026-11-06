@@ -174,8 +174,12 @@
         const slots = (conf.questions || []).map((q) => q.case);
         const faciles = (conf.questions || []).map((q) => ({ q: q.q, r: q.r, choix: (conf.choix || {})[q.case] })).concat(conf.questionsPlus || []);
         // Questions difficiles d'abord ; les plus faciles ne servent que s'il en manque
-        const tirage = melange(conf.questionsDures || []).concat(melange(faciles));
-        const questions = new Map(slots.map((c, i) => [c, tirage[i]]).filter((e) => e[1]));
+        let questions = new Map();
+        const tirerQuestions = () => {
+          const tirage = melange(conf.questionsDures || []).concat(melange(faciles));
+          questions = new Map(slots.map((c, i) => [c, tirage[i]]).filter((e) => e[1]));
+        };
+        tirerQuestions();
         const pieges = new Map((conf.pieges || []).map((p) => [p.case, p]));
         // Cases libres : blague, personne, blague, personne, musique
         const SUD = conf.sudoku || {};
@@ -194,17 +198,23 @@
         };
         const sudokus = new Map((SUD.grilles || []).map((g) => [g.case, nouvelleGrille(g.n)]));
         const libres = new Map();
-        const seq = ["blague", "personnes", "blague", "personnes", "musiques"];
-        const cnt = {};
-        let li = 0;
-        for (let n = 1; n < 80; n++) {
-          if (cadeaux.has(n) || questions.has(n) || pieges.has(n) || sudokus.has(n)) continue;
-          const k = seq[li++ % seq.length];
-          const key = k === "blague" ? "blagues" : k;
-          const arr = conf[key] || [];
-          cnt[key] = (cnt[key] || 0) + 1;
-          if (arr.length) libres.set(n, { kind: k, txt: arr[(cnt[key] - 1) % arr.length] });
-        }
+        // Les types de cases sont fixes, mais le contenu (blague, personne, musique) est retiré à chaque partie
+        const tirerLibres = () => {
+          libres.clear();
+          const seq = ["blague", "personnes", "blague", "personnes", "musiques"];
+          const lots = {};
+          const cnt = {};
+          let li = 0;
+          for (let n = 1; n < 80; n++) {
+            if (cadeaux.has(n) || questions.has(n) || pieges.has(n) || sudokus.has(n)) continue;
+            const k = seq[li++ % seq.length];
+            const key = k === "blague" ? "blagues" : k;
+            const arr = lots[key] || (lots[key] = melange(conf[key] || []));
+            cnt[key] = (cnt[key] || 0) + 1;
+            if (arr.length) libres.set(n, { kind: k, txt: arr[(cnt[key] - 1) % arr.length] });
+          }
+        };
+        tirerLibres();
         const dlg = document.createElement("dialog");
         dlg.className = "pop";
         const popTxt = el("p", "pop-txt", "");
@@ -624,6 +634,9 @@
         const raz = el("button", "big petit", "↺ Recommencer");
         raz.onclick = () => {
           if (busy || !confirm("Recommencer la partie depuis le début ?")) return;
+          const dernier = score;
+          tirerQuestions();
+          tirerLibres();
           pos = 0;
           lancers = 0;
           score = 0;
@@ -640,7 +653,7 @@
             }
           });
           placePion();
-          info.textContent = "Touche le dé ou le bouton. Objectif : la case 80 ! 🏁";
+          info.textContent = "Nouvelle partie, nouvelles surprises ! 🏆 Record : " + record + " pts" + (dernier ? " (partie précédente : " + dernier + " pts)" : "") + ". Touche le dé !";
           btn.disabled = false;
           btn.textContent = "🎲 Lancer le dé";
           cube.classList.add("idle");
