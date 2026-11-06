@@ -172,24 +172,27 @@
         };
         // Les 20 cases questions piochent au hasard dans un lot plus grand (questions + questionsPlus)
         const slots = (conf.questions || []).map((q) => q.case);
-        const pool = (conf.questions || []).map((q) => ({ q: q.q, r: q.r, choix: (conf.choix || {})[q.case] })).concat(conf.questionsPlus || []);
-        const tirage = melange(pool);
+        const faciles = (conf.questions || []).map((q) => ({ q: q.q, r: q.r, choix: (conf.choix || {})[q.case] })).concat(conf.questionsPlus || []);
+        // Questions difficiles d'abord ; les plus faciles ne servent que s'il en manque
+        const tirage = melange(conf.questionsDures || []).concat(melange(faciles));
         const questions = new Map(slots.map((c, i) => [c, tirage[i]]).filter((e) => e[1]));
         const pieges = new Map((conf.pieges || []).map((p) => [p.case, p]));
         // Cases libres : blague, personne, blague, personne, musique
         const SUD = conf.sudoku || {};
-        // Chaque case sudoku reçoit une variante de la grille (chiffres, lignes et colonnes permutés)
-        const variante = () => {
-          const perm = melange([..."0123456789"]);
-          const bandes = melange([0, 1, 2, 3, 4]).flatMap((b) => melange([0, 1]).map((k) => b * 2 + k));
-          const piles = melange([0, 1]).flatMap((p) => melange([0, 1, 2, 3, 4]).map((k) => p * 5 + k));
-          const f = (g) => bandes.map((r) => piles.map((c) => {
-            const ch = g[r][c];
-            return ch === "." ? "." : perm[+ch];
-          }).join(""));
-          return { puzzle: f(SUD.puzzle), solution: f(SUD.solution), fait: false };
+        const SYM = { 10: "0123456789", 15: "123456789ABCDEF" };
+        const DIM = { 10: [2, 5], 15: [3, 5] }; // lignes x colonnes par bloc
+        // Grille valide : motif de base, puis chiffres, lignes et colonnes permutés au hasard
+        const nouvelleGrille = (N) => {
+          const [R, C] = DIM[N];
+          const perm = melange([...SYM[N]]);
+          const rows = melange([...Array(N / R).keys()]).flatMap((b) => melange([...Array(R).keys()]).map((k) => b * R + k));
+          const cols = melange([...Array(N / C).keys()]).flatMap((p) => melange([...Array(C).keys()]).map((k) => p * C + k));
+          const sol = rows.map((r) => cols.map((c) => perm[(C * (r % R) + Math.floor(r / R) + c) % N]));
+          const vides = new Set(melange([...Array(N * N).keys()]).slice(0, SUD.vides ? SUD.vides[N] : 40));
+          const puzzle = sol.map((row, r) => row.map((ch, c) => (vides.has(r * N + c) ? "." : ch)).join(""));
+          return { N, R, C, puzzle, solution: sol.map((r) => r.join("")), val: puzzle.map((r) => r.split("")), fait: false };
         };
-        const sudokus = new Map((SUD.cases || []).map((c) => [c, variante()]));
+        const sudokus = new Map((SUD.grilles || []).map((g) => [g.case, nouvelleGrille(g.n)]));
         const libres = new Map();
         const seq = ["blague", "personnes", "blague", "personnes", "musiques"];
         const cnt = {};
@@ -365,24 +368,26 @@
         let rejouer = false;
         const sudoku = (n) => new Promise((res) => {
           const S = sudokus.get(n);
+          const { N, R, C } = S;
+          const sym = SYM[N];
           const sd = document.createElement("dialog");
-          sd.className = "pop sudoku-pop";
+          sd.className = "pop sudoku-pop n" + N;
           const grille = el("div", "sdk");
-          const msg = el("p", "sdk-msg", "🧩 Complète la grille : chaque ligne, chaque colonne et chaque bloc de 2×5 doit contenir tous les chiffres de 0 à 9 !");
-          const val = S.puzzle.map((r) => r.split(""));
-          const sol = S.solution;
+          grille.style.gridTemplateColumns = "repeat(" + N + ", minmax(0, 1fr))";
+          const msg = el("p", "sdk-msg", "🧩 Complète la grille : chaque ligne, chaque colonne et chaque bloc de " + R + "×" + C + " contient une fois chaque symbole" + (N === 15 ? " (1 à 9, puis A B C D E F)." : " (0 à 9)."));
           const btns = [];
           let sel = null;
           const choisirCase = (r, c) => {
             if (S.fait || S.puzzle[r][c] !== ".") return;
             sel = [r, c];
             btns.forEach((b) => b.classList.remove("sel"));
-            btns[r * 10 + c].classList.add("sel");
+            btns[r * N + c].classList.add("sel");
           };
-          for (let r = 0; r < 10; r++) {
-            for (let c = 0; c < 10; c++) {
+          for (let r = 0; r < N; r++) {
+            for (let c = 0; c < N; c++) {
               const fixe = S.puzzle[r][c] !== ".";
-              const b = el("button", "sdk-c" + (fixe ? " fixe" : "") + (r % 2 === 1 ? " bb" : "") + (c === 4 ? " br" : ""), fixe ? S.puzzle[r][c] : "");
+              const v = S.val[r][c];
+              const b = el("button", "sdk-c" + (fixe ? " fixe" : "") + ((r + 1) % R === 0 && r < N - 1 ? " bb" : "") + ((c + 1) % C === 0 && c < N - 1 ? " br" : ""), v === "." ? "" : v);
               b.onclick = () => choisirCase(r, c);
               btns.push(b);
               grille.append(b);
@@ -391,12 +396,13 @@
           const mettre = (v) => {
             if (!sel || S.fait) return;
             const [r, c] = sel;
-            val[r][c] = v;
-            btns[r * 10 + c].textContent = v === "." ? "" : v;
-            btns[r * 10 + c].classList.remove("err");
+            S.val[r][c] = v;
+            btns.forEach((b) => b.classList.remove("err"));
+            btns[r * N + c].textContent = v === "." ? "" : v;
           };
           const pad = el("div", "sdk-pad");
-          "1234567890".split("").forEach((d) => {
+          pad.style.gridTemplateColumns = "repeat(" + (N === 15 ? 8 : 6) + ", 1fr)";
+          sym.split("").forEach((d) => {
             const b = el("button", "", d);
             b.onclick = () => mettre(d);
             pad.append(b);
@@ -406,23 +412,42 @@
           pad.append(eff);
           const verif = el("button", "pop-close", "Vérifier ✔");
           const quitter = el("button", "pop-close alt", "Plus tard ✕");
+          // Une case est en conflit si son symbole apparaît déjà dans sa ligne, sa colonne ou son bloc
+          const conflits = () => {
+            const bad = new Set();
+            const groupes = [];
+            for (let i = 0; i < N; i++) {
+              groupes.push([...Array(N).keys()].map((k) => [i, k]), [...Array(N).keys()].map((k) => [k, i]));
+            }
+            for (let br = 0; br < N; br += R) for (let bc = 0; bc < N; bc += C) {
+              const g = [];
+              for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) g.push([br + r, bc + c]);
+              groupes.push(g);
+            }
+            groupes.forEach((g) => {
+              const vus = {};
+              g.forEach(([r, c]) => { const v = S.val[r][c]; if (v !== ".") (vus[v] = vus[v] || []).push(r * N + c); });
+              Object.values(vus).forEach((l) => l.length > 1 && l.forEach((k) => bad.add(k)));
+            });
+            return bad;
+          };
           verif.onclick = () => {
             if (S.fait) return sd.close();
-            let faux = 0, vide = 0;
-            for (let r = 0; r < 10; r++) for (let c = 0; c < 10; c++) {
-              if (S.puzzle[r][c] !== ".") continue;
-              if (val[r][c] === ".") vide++;
-              else if (val[r][c] !== sol[r][c]) { faux++; btns[r * 10 + c].classList.add("err"); }
-            }
-            if (!faux && !vide) {
+            let vide = 0;
+            S.val.forEach((row) => row.forEach((v) => v === "." && vide++));
+            const bad = conflits();
+            bad.forEach((k) => btns[k].classList.add("err"));
+            if (!bad.size && !vide) {
               S.fait = true;
               msg.textContent = "🎉 Sudoku réussi, bravo Papa !";
               verif.textContent = "Continuer ✕";
               quitter.hidden = true;
               flash();
-              gagner(100, "Sudoku résolu !");
+              gagner(N === 15 ? 200 : 100, "Sudoku résolu !");
+            } else if (bad.size) {
+              msg.textContent = "❌ Il y a des erreurs (en rouge) : un symbole est en double. Corrige-les !";
             } else {
-              msg.textContent = faux ? "❌ " + faux + " erreur" + (faux > 1 ? "s" : "") + " en rouge, corrige-les !" : "Il reste " + vide + " case" + (vide > 1 ? "s" : "") + " à remplir.";
+              msg.textContent = "Il reste " + vide + " case" + (vide > 1 ? "s" : "") + " à remplir.";
             }
           };
           quitter.onclick = () => sd.close();
@@ -604,7 +629,7 @@
           score = 0;
           serie = 0;
           vues.clear();
-          sudokus.forEach((s) => (s.fait = false));
+          sudokus.forEach((s, k) => sudokus.set(k, nouvelleGrille(s.N)));
           document.querySelectorAll(".victoire").forEach((v) => v.remove());
           majHud();
           Object.keys(cells).forEach((k) => {

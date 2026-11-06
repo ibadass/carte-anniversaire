@@ -305,3 +305,6 @@ main { padding-left: 8px; padding-right: 8px; }
 .sdk-pad { margin: 8px 0 6px; gap: 5px; }
 .sdk-pad button { min-height: 46px; }
 .sudoku-pop .pop-close { margin-top: 6px; min-height: 48px; padding: 8px 18px; }
+.sudoku-pop.n15 { width: min(98vw, 500px); padding: 10px 4px; }
+.sudoku-pop.n15 .sdk-c { font-size: 1rem; }
+.sudoku-pop.n15 .sdk-pad button { min-height: 44px; font-size: 1.2rem; }
