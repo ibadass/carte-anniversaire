@@ -279,7 +279,7 @@
         de.onclick = () => btn.click();
         const cubeAt = { x: 0, y: 0 };
         const SHOW = { 1: [0, 0], 6: [0, 180], 3: [0, -90], 4: [0, 90], 2: [-90, 0], 5: [90, 0] };
-        const btn = el("button", "big", "🚀 Démarrer le jeu");
+        const btn = el("button", "big", "🎲 Lancer le dé");
         cube.classList.add("idle");
         const rnd = (m) => {
           const a = new Uint32Array(1);
@@ -288,7 +288,7 @@
           return a[0] % m;
         };
         const rnd6 = () => rnd(5) + 1;
-        const info = el("p", "hint", "Atteins la case 80 pour fêter tes 80 ans !");
+        const info = el("p", "hint", "Touche le dé ou le bouton. Objectif : la case 80 ! 🏁");
         let pos = 0;
         let busy = false;
         let stageEl;
@@ -565,7 +565,7 @@
               cells[n].classList.add("ouverte");
             }
             stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
-            info.textContent = "Case " + pos + " / 80";
+            info.textContent = "📍 Case " + pos + " sur 80";
             busy = false;
             btn.disabled = false;
             return;
@@ -591,14 +591,14 @@
             return;
           }
           stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
-          info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "Case " + pos + " / 80 · ✨ face magique : 1 chance sur 8 à chaque lancer";
+          info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "📍 Case " + pos + " sur 80";
           busy = false;
           btn.textContent = "🎲 Lancer le dé";
           btn.disabled = pos === 80;
         };
-        const raz = el("button", "big", "↺ RAZ");
+        const raz = el("button", "big petit", "↺ Recommencer");
         raz.onclick = () => {
-          if (busy) return;
+          if (busy || !confirm("Recommencer la partie depuis le début ?")) return;
           pos = 0;
           lancers = 0;
           score = 0;
@@ -615,9 +615,9 @@
             }
           });
           placePion();
-          info.textContent = "Atteins la case 80 pour fêter tes 80 ans !";
+          info.textContent = "Touche le dé ou le bouton. Objectif : la case 80 ! 🏁";
           btn.disabled = false;
-          btn.textContent = "🚀 Démarrer le jeu";
+          btn.textContent = "🎲 Lancer le dé";
           cube.classList.add("idle");
         };
         const stage = el("div", "stage");
