@@ -254,7 +254,7 @@
         lancer.onclick = () => { veutLancer = true; dlg.close(); };
         const actions = el("div", "pop-actions");
         actions.append(lancer, close);
-        // "les deux" (question), "lancer" (fin de tour) ou "suite" (d'autres messages suivent) ; false = rien
+        // Un seul bouton à la fois : "lancer" (fin de tour) ou "suite" (d'autres messages suivent) ; false = aucun
         const montrerActions = (mode) => {
           const peutLancer = pos < 80;
           lancer.hidden = !mode || mode === "suite" || !peutLancer;
@@ -553,7 +553,7 @@
                 const ok = txt === bonne;
                 if (ok) heartBoom();
                 popTxt.textContent = (ok ? "✅ Bravo ! " : "❌ Raté ! ") + q.r;
-                montrerActions("les deux");
+                montrerActions("lancer");
                 if (!vues.has(n)) {
                   serie = ok ? serie + 1 : 0;
                   const bonus = ok && serie >= 2 ? 10 * Math.min(serie - 1, 5) : 0;
