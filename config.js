@@ -8,7 +8,7 @@ window.CARTE_CONFIG = {
   message:
     "80 ans de sourires, de belles histoires et de tendresse. Tu es notre plus beau livre, et on n'a pas fini de te lire !",
   // Ordre et choix des modules : "feux", "bisous", "livres", "bd", "voeux"
-  modules: ["feux", "bisous", "livres", "bd", "voeux"],
+  modules: ["feux", "bisous", "livres", "bd", "western", "voeux"],
   livres: [
     { titre: "Le Petit Prince", auteur: "Saint-Exupéry", emoji: "🌹" },
     { titre: "Les Misérables", auteur: "Victor Hugo", emoji: "📕" },
@@ -30,6 +30,11 @@ window.CARTE_CONFIG = {
     { titre: "Boule et Bill", auteur: "Roba 🇧🇪", emoji: "🐶", couleur: "#dd6b20", phrase: "Ouaf ! Joyeux anniversaire !" },
     { titre: "Le Chat", auteur: "Philippe Geluck 🇧🇪", emoji: "🐱", couleur: "#718096", phrase: "Le Chat vous souhaite un anniversaire... félin !" },
     { titre: "Les Tuniques bleues", auteur: "Lambil & Cauvin 🇧🇪", emoji: "💂", couleur: "#2c5282", phrase: "Garde-à-vous, c'est la fête !" },
+  ],
+  western: [
+    { titre: "Pour une poignée de dollars", annee: "1964", acteur: "Clint Eastwood", emoji: "🌵", couleur: "linear-gradient(135deg,#d9a441,#b5651d)", phrase: "L'homme sans nom arrive en ville… et repart plus riche." },
+    { titre: "Et pour quelques dollars de plus", annee: "1965", acteur: "Clint Eastwood", emoji: "🔫", couleur: "linear-gradient(135deg,#e07a5f,#7d4b32)", phrase: "Deux chasseurs de primes, un seul objectif : le magot." },
+    { titre: "Le Bon, la Brute et le Truand", annee: "1966", acteur: "Clint Eastwood", emoji: "🎩", couleur: "linear-gradient(135deg,#3d8b8b,#c2a14d)", phrase: "Le cimetière, le sifflet et trois hommes… le duel final !" },
   ],
   voeux: [
     "Que chaque jour t'apporte une petite douceur 🍰",

@@ -140,6 +140,23 @@
         s.append(g);
       },
     },
+    western: {
+      label: "🤠 Western",
+      build(s) {
+        s.append(el("p", "hint", "La trilogie du dollar de Sergio Leone, en mode Far West !"));
+        const bulle = el("div", "bulle", "Pour une poignée de bisous… 🤠");
+        s.append(bulle);
+        const g = el("div", "cards");
+        cfg.western.forEach((w) => {
+          const c = el("button", "card bd");
+          c.style.background = w.couleur;
+          c.append(el("span", "e", w.emoji), el("b", "", w.titre), el("small", "", w.annee + " · " + w.acteur));
+          c.onclick = () => { bulle.textContent = w.emoji + " " + w.phrase; kisses(12); };
+          g.append(c);
+        });
+        s.append(g);
+      },
+    },
     voeux: {
       label: "💌 Vœux",
       build(s) {
