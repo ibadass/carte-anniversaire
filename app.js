@@ -268,9 +268,12 @@
           btn.disabled = true;
           const r = 1 + Math.floor(Math.random() * 6);
           const [tx, ty] = SHOW[r];
-          cubeAt.x = Math.round(cubeAt.x / 360) * 360 + 720 + tx;
-          cubeAt.y = Math.round(cubeAt.y / 360) * 360 + 720 + ty;
+          cubeAt.x = Math.round(cubeAt.x / 360) * 360 + 1080 + tx;
+          cubeAt.y = Math.round(cubeAt.y / 360) * 360 + 1080 + ty;
           cube.style.transform = "rotateX(" + cubeAt.x + "deg) rotateY(" + cubeAt.y + "deg)";
+          de.classList.remove("throw");
+          void de.offsetWidth;
+          de.classList.add("throw");
           let target = pos + r;
           if (target > 80) target = 160 - target;
           await move(target);
