@@ -79,6 +79,9 @@ footer { text-align: center; padding: 16px; font-size: 1.1rem; }
 .cell.oie { background: linear-gradient(135deg, #ecc94b, #d69e2e); color: #13294b; }
 .cell.cadeau { background: linear-gradient(135deg, #e53e3e, #9b2c2c); color: #fff; }
 .cell.question { background: linear-gradient(135deg, #3182ce, #2b6cb0); color: #fff; }
+.cell.blague { background: linear-gradient(135deg, #38a169, #276749); }
+.cell.personnes { background: linear-gradient(135deg, #d53f8c, #97266d); }
+.cell.musiques { background: linear-gradient(135deg, #6b46c1, #44337a); }
 .cell.fin { background: linear-gradient(135deg, #f6e05e, #f4c542); color: #13294b; font-size: .9rem; }
 .cell.ouverte { outline: 2px solid #f4c542; }
 .cell.lit::before { content: ""; position: absolute; inset: -40%; border-radius: 50%; background: repeating-conic-gradient(from 0deg, rgba(255,235,150,.9) 0 6deg, transparent 6deg 18deg); animation: rays 1s ease-out forwards; pointer-events: none; z-index: 2; }
@@ -100,6 +103,8 @@ footer { text-align: center; padding: 16px; font-size: 1.1rem; }
 @keyframes throwUp { 0% { transform: translateY(0); } 40% { transform: translateY(-38px); } 70% { transform: translateY(0); } 85% { transform: translateY(-8px); } 100% { transform: translateY(0); } }
 .cube { position: relative; width: 150px; height: 150px; transform-style: preserve-3d; transition: transform 1.8s cubic-bezier(.15,.7,.2,1); }
 .cube .face { position: absolute; inset: 0; background: linear-gradient(145deg, #ffffff, #ffe9a8); color: #b8860b; border: 3px solid #f4c542; border-radius: 22px; font-size: 6rem; line-height: 144px; text-align: center; backface-visibility: hidden; box-shadow: inset 0 0 18px rgba(0,0,0,.2), inset 6px 6px 14px rgba(255,255,255,.7); text-shadow: 0 2px 0 rgba(0,0,0,.2); }
+.cube.idle { transition: none; animation: idleSpin 5s linear infinite; }
+@keyframes idleSpin { from { transform: rotateX(-20deg) rotateY(0deg); } to { transform: rotateX(340deg) rotateY(360deg); } }
 .cube .f1 { transform: translateZ(75px); }
 .cube .f6 { transform: rotateY(180deg) translateZ(75px); }
 .cube .f3 { transform: rotateY(90deg) translateZ(75px); }

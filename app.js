@@ -148,6 +148,20 @@
         const conf = cfg.oie || {};
         const cadeaux = new Set(conf.cadeaux || []);
         const questions = new Map((conf.questions || []).map((q) => [q.case, q]));
+        const pieges = new Map((conf.pieges || []).map((p) => [p.case, p]));
+        // Cases libres : blague, personne, blague, personne, musique
+        const libres = new Map();
+        const seq = ["blague", "personnes", "blague", "personnes", "musiques"];
+        const cnt = {};
+        let li = 0;
+        for (let n = 1; n < 80; n++) {
+          if (cadeaux.has(n) || questions.has(n) || pieges.has(n)) continue;
+          const k = seq[li++ % seq.length];
+          const key = k === "blague" ? "blagues" : k;
+          const arr = conf[key] || [];
+          cnt[key] = (cnt[key] || 0) + 1;
+          if (arr.length) libres.set(n, { kind: k, txt: arr[(cnt[key] - 1) % arr.length] });
+        }
         const dlg = document.createElement("dialog");
         dlg.className = "pop";
         const popTxt = el("p", "pop-txt", "");
@@ -170,8 +184,9 @@
           for (let c = 0; c < 10; c++) nums.push(row * 10 + c + 1);
           if (row % 2 === 1) nums.reverse();
           nums.forEach((n) => {
-            const kind = n === 80 ? " fin" : cadeaux.has(n) ? " cadeau" : questions.has(n) ? " question" : "";
-            const ico = n === 80 ? "🏁" : cadeaux.has(n) ? "🎁" : questions.has(n) ? "❓" : "";
+            const lib = libres.get(n);
+            const kind = n === 80 ? " fin" : pieges.has(n) ? " piege" : cadeaux.has(n) ? " cadeau" : questions.has(n) ? " question" : lib ? " " + lib.kind : "";
+            const ico = n === 80 ? "🏁" : pieges.has(n) ? pieges.get(n).e : cadeaux.has(n) ? "🎁" : questions.has(n) ? "❓" : lib ? { blague: "😂", personnes: "👪", musiques: "🎵" }[lib.kind] : "";
             const c = el("div", "cell" + kind);
             c.append(el("span", "num", String(n)), el("span", "ico", ico));
             cells[n] = c;
@@ -188,7 +203,13 @@
         de.append(cube);
         const cubeAt = { x: 0, y: 0 };
         const SHOW = { 1: [0, 0], 6: [0, 180], 3: [0, -90], 4: [0, 90], 2: [-90, 0], 5: [90, 0] };
-        const btn = el("button", "big", "🎲 Lancer le dé");
+        const btn = el("button", "big", "🚀 Démarrer le jeu");
+        cube.classList.add("idle");
+        const rnd6 = () => {
+          const a = new Uint32Array(1);
+          do crypto.getRandomValues(a); while (a[0] >= 4294967292); // évite le biais du modulo
+          return (a[0] % 6) + 1;
+        };
         const info = el("p", "hint", "Atteins la case 80 pour fêter tes 80 ans !");
         let pos = 0;
         let busy = false;
@@ -216,6 +237,22 @@
           }
         };
         const reveal = async () => {
+          const p = pieges.get(pos);
+          if (p) {
+            cells[pos].classList.add("ouverte", "piege-hit");
+            flash(true);
+            await say(p.e + " " + p.titre);
+            await say(p.gage);
+            return;
+          }
+          const lib = libres.get(pos);
+          if (lib) {
+            cells[pos].classList.add("ouverte");
+            lit(pos, "lit");
+            flash();
+            await say(lib.kind === "blague" ? "😂 Blague de Papa : " + lib.txt : lib.txt);
+            return;
+          }
           const q = questions.get(pos);
           if (!q) return;
           cells[pos].classList.add("ouverte");
@@ -248,7 +285,9 @@
           if (busy || pos === 80) return;
           busy = true;
           btn.disabled = true;
-          const r = 1 + Math.floor(Math.random() * 6);
+          const r = rnd6();
+          cube.classList.remove("idle");
+          void cube.offsetWidth;
           const [tx, ty] = SHOW[r];
           cubeAt.x = Math.round(cubeAt.x / 360) * 360 + 1080 + tx;
           cubeAt.y = Math.round(cubeAt.y / 360) * 360 + 1080 + ty;
@@ -262,6 +301,7 @@
           await arrive();
           info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "Case " + pos + " / 80";
           busy = false;
+          btn.textContent = "🎲 Lancer le dé";
           btn.disabled = pos === 80;
         };
         const raz = el("button", "big", "↺ RAZ");
@@ -272,6 +312,8 @@
           placePion();
           info.textContent = "Atteins la case 80 pour fêter tes 80 ans !";
           btn.disabled = false;
+          btn.textContent = "🚀 Démarrer le jeu";
+          cube.classList.add("idle");
         };
         const bar = el("div", "oie-bar");
         bar.append(depart, de, btn, raz);
