@@ -7,7 +7,7 @@
   <title>Le tour du monde en 80 ans</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.svg">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   <canvas id="fw"></canvas>
@@ -18,13 +18,13 @@
       <h1 id="titre"></h1>
       <p id="message"></p>
       <p id="accueil" class="accueil"></p>
-      <button id="go" class="big go">🎲 Jouer</button>
+      <button id="go" class="big go" onclick="document.body.classList.add('playing');scrollTo(0,0)">🎲 Jouer</button>
     </header>
     <nav id="nav"></nav>
     <main id="main"></main>
     <footer id="de"></footer>
   </div>
-  <script src="config.js"></script>
-  <script src="app.js"></script>
+  <script src="config.js?v=6"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>

@@ -17,7 +17,6 @@
   $("#titre").textContent = cfg.titre || "Joyeux anniversaire " + cfg.nom + " ! 🎂";
   $("#message").textContent = cfg.message;
   $("#accueil").textContent = cfg.accueil || "";
-  $("#go").onclick = () => { document.body.classList.add("playing"); scrollTo(0, 0); };
   $("#de").textContent = "Avec tout notre amour, " + cfg.de + " 💝";
   document.title = "Joyeux anniversaire " + cfg.nom + " !";
 
