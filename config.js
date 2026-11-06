@@ -2,6 +2,7 @@
 window.CARTE_CONFIG = {
   nom: "Papa",
   titre: "Le tour du monde en 80 ans",
+  accueil: "Bonjour Bernard et bon anniversaire ! Je vous souhaite une belle expérience...!",
   age: 80,
   photo: "IMG_8596.jpeg", // mettre "" pour masquer la photo
   de: "Claudine, Florence, Dominique, François, Philippe, Nicole, Olivier, Claire et toute la tribu",

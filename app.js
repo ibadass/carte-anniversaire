@@ -282,8 +282,17 @@
           busy = false;
           btn.disabled = pos === 80;
         };
+        const raz = el("button", "big", "↺ RAZ");
+        raz.onclick = () => {
+          if (busy) return;
+          pos = 0;
+          Object.values(cells).forEach((c) => c.classList.remove("ouverte", "lit", "piege-hit"));
+          placePion();
+          info.textContent = "Atteins la case 80 pour fêter tes 80 ans !";
+          btn.disabled = false;
+        };
         const bar = el("div", "oie-bar");
-        bar.append(depart, de, btn);
+        bar.append(depart, de, btn, raz);
         s.append(bar, info, plateau);
         placePion();
       },
@@ -413,6 +422,16 @@
   };
 
   const nav = $("#nav"), main = $("#main"), tabs = {};
+  if (cfg.accueil) {
+    const acc = document.createElement("dialog");
+    acc.className = "pop";
+    const ok = el("button", "pop-close", "C'est parti ✕");
+    ok.onclick = () => acc.close();
+    acc.append(el("p", "pop-txt", cfg.accueil), ok);
+    document.body.append(acc);
+    acc.showModal ? acc.showModal() : acc.setAttribute("open", "");
+  }
+
   const active = cfg.modules.filter((m) => modules[m]);
   function select(id) {
     active.forEach((m) => {
