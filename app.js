@@ -713,7 +713,26 @@
         haut.append(hud, info);
         const bas = el("div", "ecran-bas");
         const cmd = el("div", "cmd");
-        cmd.append(row);
+        // Taille du texte réglable (mémorisée)
+        const TAILLES = [100, 118, 136, 156];
+        const KT = "carte80-texte";
+        let ti = Math.min(Math.max(+(localStorage.getItem(KT) || 1), 0), TAILLES.length - 1);
+        const taille = el("div", "taille");
+        const moins = el("button", "", "A−");
+        const plus = el("button", "", "A+");
+        moins.setAttribute("aria-label", "Texte plus petit");
+        plus.setAttribute("aria-label", "Texte plus grand");
+        const appliquer = () => {
+          document.documentElement.style.fontSize = TAILLES[ti] + "%";
+          localStorage.setItem(KT, String(ti));
+          moins.disabled = ti === 0;
+          plus.disabled = ti === TAILLES.length - 1;
+        };
+        moins.onclick = () => { ti--; appliquer(); };
+        plus.onclick = () => { ti++; appliquer(); };
+        taille.append(moins, el("span", "", "Texte"), plus);
+        appliquer();
+        cmd.append(row, taille);
         bas.append(de, cmd);
         board.append(plateau);
         s.append(haut, board, bas);

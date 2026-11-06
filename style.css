@@ -358,3 +358,7 @@ body.playing .cell .ico { font-size: clamp(.8rem, 4vw, 1.15rem); }
 @keyframes boomText { 0% { transform: scale(.3) rotate(-8deg); opacity: 0; } 25% { transform: scale(1.3) rotate(4deg); opacity: 1; } 100% { transform: scale(1.1) rotate(0); opacity: 0; } }
 
 .pop-actions .pop-close.alt { background: linear-gradient(180deg, #2b4a8a, #13294b); color: #ffd95a; border: 0; box-shadow: 0 3px 0 #0a1630; }
+
+.taille { display: flex; align-items: center; justify-content: center; gap: 10px; color: #cfe3ff; font-size: .9rem; }
+.taille button { min-width: 56px; min-height: 40px; border-radius: 12px; border: 2px solid rgba(207,227,255,.6); background: transparent; color: #fff; font-family: inherit; font-weight: bold; font-size: 1.1rem; }
+.taille button:disabled { opacity: .35; }
