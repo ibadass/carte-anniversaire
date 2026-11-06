@@ -331,11 +331,15 @@
           await sleep(1900);
           if (bonus) {
             board.scrollIntoView({ behavior: "smooth", block: "start" });
-            info.textContent = "📸 Touche n'importe quelle case pour l'ouvrir !";
-            await say("📸 Face photo ! Choisis n'importe quelle case du plateau à ouvrir.");
+            info.textContent = "✨ Touche la case où tu veux aller !";
+            await say("✨ Face magique ! Choisis n'importe quelle case du plateau : le pion s'y téléporte (sauf l'arrivée, pas de raccourci vers la victoire !).");
             const n = await choisir();
             cells[n].scrollIntoView({ behavior: "smooth", block: "center" });
-            await arrive(n);
+            pos = n;
+            placePion();
+            flash();
+            await sleep(500);
+            await arrive(pos);
             photoOff();
             stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
             info.textContent = "Case " + pos + " / 80";
@@ -350,7 +354,7 @@
           await arrive(pos);
           stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
           const reste = EVERY - (lancers % EVERY);
-          info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "Case " + pos + " / 80 · 📸 face photo dans " + reste + " lancer" + (reste > 1 ? "s" : "");
+          info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "Case " + pos + " / 80 · ✨ face magique dans " + reste + " lancer" + (reste > 1 ? "s" : "");
           busy = false;
           btn.textContent = "🎲 Lancer le dé";
           btn.disabled = pos === 80;
