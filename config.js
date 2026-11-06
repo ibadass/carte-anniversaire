@@ -99,6 +99,10 @@ window.CARTE_CONFIG = {
   oie: {
     // 4 cadeaux physiques à ouvrir (cases hors questions)
     cadeaux: [12, 32, 52, 68],
+    // Cadeau avec photo (fichier à ajouter dans le dépôt) : après l'avoir vue, on rejoue un lancer
+    cadeauxPhoto: {
+      52: { photo: "ursula-andress.jpg", txt: "Ursula Andress, la plus célèbre des James Bond Girls, sort de l'eau rien que pour toi ! Pour la remercier, tu rejoues un lancer de dé !" },
+    },
     // Pièges (gage à faire par toute la table)
     pieges: [
       {

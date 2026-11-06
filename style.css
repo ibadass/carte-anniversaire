@@ -265,3 +265,4 @@ header .go { width: 100%; max-width: 20rem; margin: 26px auto 8px; }
 .sdk-pad button { font: bold 1.2rem system-ui, sans-serif; padding: 10px 0; border-radius: 10px; border: 2px solid #13294b; background: #fff; color: #13294b; box-shadow: 0 3px 0 rgba(19,41,75,.35); }
 .sdk-pad button.wide { grid-column: span 2; }
 .pop-close.alt { background: transparent; color: #13294b; box-shadow: none; border: 2px solid #13294b; margin-left: 8px; }
+.pop-img { display: block; width: 100%; max-height: 50vh; object-fit: cover; object-position: center 20%; border-radius: 16px; margin: 0 0 12px; box-shadow: 0 4px 14px rgba(0,0,0,.3); }

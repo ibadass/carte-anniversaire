@@ -170,13 +170,17 @@
         const close = el("button", "pop-close", "Continuer ✕");
         close.onclick = () => dlg.close();
         const opts = el("div", "pop-opts");
-        dlg.append(popTxt, opts, close);
+        const popImg = el("img", "pop-img");
+        popImg.hidden = true;
+        popImg.onerror = () => { popImg.hidden = true; };
+        dlg.append(popImg, popTxt, opts, close);
         dlg.addEventListener("close", () => { const f = next; next = null; f && f(); });
         document.body.append(dlg);
         const say = (t) => new Promise((res) => {
           next = res;
           popTxt.textContent = t;
           opts.replaceChildren();
+          popImg.hidden = true;
           close.hidden = false;
           if (dlg.open) return;
           dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
@@ -319,6 +323,7 @@
           gagner(pts, why);
         };
         let sudokuFait = false;
+        let rejouer = false;
         const sudoku = () => new Promise((res) => {
           const sd = document.createElement("dialog");
           sd.className = "pop sudoku-pop";
@@ -468,7 +473,17 @@
             cells[n].classList.add("ouverte");
             lit(n, "lit");
             flash();
+            const premier = !vues.has(n);
             premiere(n, 30, "Un cadeau !");
+            const sp = (conf.cadeauxPhoto || {})[n];
+            if (sp) {
+              const fini = say("🎁 Cadeau ! " + sp.txt);
+              popImg.src = sp.photo;
+              popImg.hidden = false;
+              await fini;
+              rejouer = premier;
+              return;
+            }
             await say("🎁 Cadeau ! Ouvre le cadeau physique qui t'attend !");
             return;
           }
@@ -500,6 +515,7 @@
               cells[n].scrollIntoView({ behavior: "smooth", block: "center" });
               await sleep(400);
               await arrive(n);
+              rejouer = false;
               cells[n].classList.add("ouverte");
             }
             stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -518,6 +534,16 @@
             premiere("palier" + p, 25, "Palier " + p + " franchi !");
           }
           await arrive(pos);
+          if (rejouer) {
+            rejouer = false;
+            busy = false;
+            btn.disabled = false;
+            info.textContent = "🎲 Tu rejoues !";
+            stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
+            await sleep(600);
+            btn.onclick();
+            return;
+          }
           stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
           info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "Case " + pos + " / 80 · ✨ face magique : 1 chance sur 8 à chaque lancer";
           busy = false;
