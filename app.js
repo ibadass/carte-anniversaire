@@ -120,6 +120,28 @@
         s.append(g);
       },
     },
+    proches: {
+      label: "👥 Nos proches",
+      build(s) {
+        s.append(el("p", "hint", "Les personnes qui comptent pour toi 💛"));
+        const list = el("div", "frise");
+        (cfg.proches || []).forEach((p) => {
+          const c = el("div", "etape");
+          if (p.photo) {
+            const img = el("img", "ph");
+            img.src = p.photo;
+            img.alt = p.titre;
+            img.onerror = () => img.remove();
+            c.append(img);
+          }
+          c.append(el("span", "e", p.emoji), el("b", "", p.titre));
+          if (p.sous) c.append(el("small", "", p.sous));
+          c.append(el("p", "", p.phrase));
+          list.append(c);
+        });
+        s.append(list);
+      },
+    },
     oie: {
       label: "🎲 Jeu de l'oie",
       build(s) {
@@ -160,7 +182,13 @@
 
         const depart = el("div", "depart", "Départ");
         const pion = el("span", "pion", "👴");
-        const de = el("div", "de-oie", "🎲");
+        const de = el("div", "scene");
+        const cube = el("div", "cube");
+        const faces = ["⚀", "⚅", "⚂", "⚃", "⚁", "⚄"];
+        ["f1", "f6", "f3", "f4", "f2", "f5"].forEach((cls, i) => cube.append(el("div", "face " + cls, faces[i])));
+        de.append(cube);
+        const cubeAt = { x: 0, y: 0 };
+        const SHOW = { 1: [0, 0], 6: [0, 180], 3: [0, -90], 4: [0, 90], 2: [-90, 0], 5: [90, 0] };
         const btn = el("button", "big", "🎲 Lancer le dé");
         const info = el("p", "hint", "Atteins la case 80 pour fêter tes 80 ans !");
         let pos = 0;
@@ -229,10 +257,10 @@
           busy = true;
           btn.disabled = true;
           const r = 1 + Math.floor(Math.random() * 6);
-          de.textContent = "🎲 " + r;
-          de.classList.remove("roll");
-          void de.offsetWidth;
-          de.classList.add("roll");
+          const [tx, ty] = SHOW[r];
+          cubeAt.x = Math.round(cubeAt.x / 360) * 360 + 720 + tx;
+          cubeAt.y = Math.round(cubeAt.y / 360) * 360 + 720 + ty;
+          cube.style.transform = "rotateX(" + cubeAt.x + "deg) rotateY(" + cubeAt.y + "deg)";
           let target = pos + r;
           if (target > 80) target = 160 - target;
           await move(target);

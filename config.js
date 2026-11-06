@@ -8,7 +8,7 @@ window.CARTE_CONFIG = {
   message:
     "80 ans de sourires, de belles histoires et de tendresse. Tu es notre plus beau livre, et on n'a pas fini de te lire !",
   // Ordre et choix des modules : "calendrier", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"
-  modules: ["calendrier", "oie", "parcours", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"],
+  modules: ["calendrier", "oie", "parcours", "proches", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"],
 
   // 80 cases à ouvrir (une par année). Le 80e déclenche le grand feu d'artifice.
   calendrier: [
@@ -109,6 +109,19 @@ window.CARTE_CONFIG = {
       { case: 77, recul: 3, t: "Un détour par la boulangerie : tu recules de 3 cases." },
     ],
   },
+
+  // Ses proches (ajouter "photo": "fichier.jpeg" quand la photo est sur le dépôt)
+  proches: [
+    { titre: "Denis et Marie-Paule", sous: "Pralognan-la-Vanoise", emoji: "🏔️", phrase: "Ses plus vieux amis : une amitié de toujours !" },
+    { titre: "Yves et Michelle", emoji: "🥂", phrase: "Des amis fidèles, toujours partants pour un bon moment." },
+    { titre: "La placette", emoji: "🪑", phrase: "Là où tout le monde se retrouve pour refaire le monde." },
+    { titre: "Andrée", sous: "Sa tante", emoji: "🌼", phrase: "Une tante qui compte beaucoup pour toute la famille." },
+    { titre: "Joël et Marie-Jo", sous: "Bretons et bricoleurs", emoji: "🔧", phrase: "Ceux qui réparent tout, même les cœurs !" },
+    { titre: "Les voisins", emoji: "🏘️", phrase: "Des voisins toujours souriants, toujours là pour un coup de main." },
+    { titre: "Ça ira bien avec un jean", emoji: "👖", phrase: "Élégant et décontracté, comme toujours !" },
+    { titre: "Les rideaux, les portes, les fruits... et les rideaux !", emoji: "🚪", phrase: "Un petit clin d'œil de famille, on ne l'oublie pas." },
+    { titre: "Un mot de nous tous", emoji: "💌", phrase: "Dis-nous juste « je t'aime », parce que nous on t'aime ! Si tu savais !" },
+  ],
 
   // Son parcours de vie
   ne: "Né le 6 novembre 1946 à Paris",
