@@ -8,7 +8,7 @@ window.CARTE_CONFIG = {
   message:
     "80 ans de sourires, de belles histoires et de tendresse. Tu es notre plus beau livre, et on n'a pas fini de te lire !",
   // Ordre et choix des modules : "calendrier", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"
-  modules: ["calendrier", "parcours", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"],
+  modules: ["calendrier", "oie", "parcours", "passions", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"],
 
   // 80 cases à ouvrir (une par année). Le 80e déclenche le grand feu d'artifice.
   calendrier: [
@@ -93,6 +93,22 @@ window.CARTE_CONFIG = {
     { e: "🎵", t: "Une mélodie douce pour une journée de fête." },
     { e: "🎆", t: "Le grand final : bon anniversaire Papa, on t'aime !" },
   ],
+
+  // Le jeu de l'oie : 80 cases, pièges et oies bonus
+  oie: {
+    oies: [9, 18, 27, 36, 45, 54, 63, 72],
+    pieges: [
+      { case: 7, recul: 3, t: "Une peau de banane sur le chemin ! Tu recules de 3 cases." },
+      { case: 16, recul: 4, t: "Une averse surprise : retour de 4 cases pour se mettre à l'abri." },
+      { case: 25, recul: 2, t: "Un café trop chaud : tu recules de 2 cases." },
+      { case: 34, recul: 5, t: "Un sentier glissant ! Tu recules de 5 cases." },
+      { case: 42, recul: 3, t: "Une partie de cartes qui s'éternise : retour de 3 cases." },
+      { case: 53, recul: 4, t: "Un chien trop joueur : tu recules de 4 cases." },
+      { case: 61, recul: 2, t: "Une sieste imprévue : tu recules de 2 cases." },
+      { case: 68, recul: 5, t: "Un bouchon sur la route : retour de 5 cases." },
+      { case: 77, recul: 3, t: "Un détour par la boulangerie : tu recules de 3 cases." },
+    ],
+  },
 
   // Son parcours de vie
   ne: "Né le 6 novembre 1946 à Paris",

@@ -120,6 +120,133 @@
         s.append(g);
       },
     },
+    oie: {
+      label: "🎲 Jeu de l'oie",
+      build(s) {
+        const conf = cfg.oie || {};
+        const oies = new Set(conf.oies || []);
+        const pieges = new Map((conf.pieges || []).map((p) => [p.case, p]));
+        const dlg = document.createElement("dialog");
+        dlg.className = "pop";
+        const popTxt = el("p", "pop-txt", "");
+        const close = el("button", "pop-close", "Continuer ✕");
+        close.onclick = () => dlg.close();
+        dlg.append(popTxt, close);
+        let next = null;
+        dlg.addEventListener("close", () => { const f = next; next = null; f && f(); });
+        document.body.append(dlg);
+        const say = (t) => new Promise((res) => {
+          next = res;
+          popTxt.textContent = t;
+          if (dlg.open) return;
+          dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
+        });
+
+        const plateau = el("div", "plateau");
+        const cells = {};
+        for (let row = 7; row >= 0; row--) {
+          const nums = [];
+          for (let c = 0; c < 10; c++) nums.push(row * 10 + c + 1);
+          if (row % 2 === 1) nums.reverse();
+          nums.forEach((n) => {
+            const kind = n === 80 ? " fin" : pieges.has(n) ? " piege" : oies.has(n) ? " oie" : "";
+            const ico = n === 80 ? "🏁" : pieges.has(n) ? "🕳️" : oies.has(n) ? "🪿" : "";
+            const c = el("div", "cell" + kind);
+            c.append(el("span", "num", String(n)), el("span", "ico", ico));
+            cells[n] = c;
+            plateau.append(c);
+          });
+        }
+
+        const depart = el("div", "depart", "Départ");
+        const pion = el("span", "pion", "👴");
+        const de = el("div", "de-oie", "🎲");
+        const btn = el("button", "big", "🎲 Lancer le dé");
+        const info = el("p", "hint", "Atteins la case 80 pour fêter tes 80 ans !");
+        let pos = 0;
+        let busy = false;
+        const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+        const placePion = () => (pos ? cells[pos].append(pion) : depart.append(pion));
+        const lit = (n, cls) => {
+          const c = cells[n];
+          if (!c) return;
+          c.classList.remove(cls);
+          void c.offsetWidth;
+          c.classList.add(cls);
+          setTimeout(() => c.classList.remove(cls), 1200);
+        };
+        const flash = (red) => {
+          const f = el("div", "flash" + (red ? " red" : ""));
+          document.body.append(f);
+          setTimeout(() => f.remove(), 1000);
+        };
+        const move = async (to) => {
+          const dir = to > pos ? 1 : -1;
+          while (pos !== to) {
+            pos += dir;
+            placePion();
+            await sleep(260);
+          }
+        };
+        const reveal = async () => {
+          const d = cfg.calendrier[pos - 1];
+          cells[pos].classList.add("ouverte");
+          lit(pos, "lit");
+          flash();
+          if (d) await say(d.e + " " + d.t);
+        };
+        const arrive = async () => {
+          if (!pos) return;
+          if (pos === 80) {
+            cells[80].classList.add("ouverte");
+            lit(80, "lit");
+            flash();
+            spectacle(8000);
+            await say("🏆 Bravo Papa ! Tu as atteint tes 80 ans !");
+            info.textContent = "🏆 Tu as gagné ! Bon anniversaire Papa !";
+            return;
+          }
+          if (pieges.has(pos)) {
+            const p = pieges.get(pos);
+            flash(true);
+            lit(pos, "piege-hit");
+            await say("🕳️ Piège ! " + p.t);
+            await move(Math.max(0, pos - p.recul));
+            return;
+          }
+          if (oies.has(pos)) {
+            lit(pos, "lit");
+            flash();
+            await say("🪿 L'oie ! Tu avances de 2 cases bonus.");
+            await move(Math.min(80, pos + 2));
+            await arrive();
+            return;
+          }
+          await reveal();
+        };
+        btn.onclick = async () => {
+          if (busy || pos === 80) return;
+          busy = true;
+          btn.disabled = true;
+          const r = 1 + Math.floor(Math.random() * 6);
+          de.textContent = "🎲 " + r;
+          de.classList.remove("roll");
+          void de.offsetWidth;
+          de.classList.add("roll");
+          let target = pos + r;
+          if (target > 80) target = 160 - target;
+          await move(target);
+          await arrive();
+          info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "Case " + pos + " / 80";
+          busy = false;
+          btn.disabled = pos === 80;
+        };
+        const bar = el("div", "oie-bar");
+        bar.append(depart, de, btn);
+        s.append(bar, info, plateau);
+        placePion();
+      },
+    },
     calendrier: {
       label: "📅 Calendrier",
       build(s) {

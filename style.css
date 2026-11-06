@@ -65,3 +65,29 @@ footer { text-align: center; padding: 16px; font-size: 1.1rem; }
 .etape .e { font-size: 1.8rem; margin-right: 8px; }
 .etape small { display: block; color: #f4c542; font-weight: bold; }
 .etape p { margin: 6px 0 0; font-size: 1.05rem; }
+
+.oie-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 8px 0; }
+.depart { background: #1f5f8b; color: #fff; border-radius: 12px; padding: 8px 10px; font-weight: bold; min-width: 80px; text-align: center; }
+.de-oie { font-size: 2rem; font-weight: bold; color: #f4c542; min-width: 90px; text-align: center; }
+.de-oie.roll { animation: rollDe .6s ease-out; }
+@keyframes rollDe { 0% { transform: rotate(-360deg) scale(.4); } 100% { transform: none; } }
+.plateau { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; margin-top: 8px; }
+.cell { position: relative; aspect-ratio: 1; border-radius: 6px; background: linear-gradient(135deg, #2b6cb0, #1f5f8b); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: .7rem; overflow: visible; box-shadow: 0 1px 3px rgba(0,0,0,.35); }
+.cell .num { font-weight: bold; font-size: .75rem; }
+.cell .ico { font-size: .9rem; line-height: 1; }
+.cell.piege { background: linear-gradient(135deg, #7b1e1e, #c53030); }
+.cell.oie { background: linear-gradient(135deg, #ecc94b, #d69e2e); color: #13294b; }
+.cell.fin { background: linear-gradient(135deg, #f6e05e, #f4c542); color: #13294b; font-size: .9rem; }
+.cell.ouverte { outline: 2px solid #f4c542; }
+.cell.lit::before { content: ""; position: absolute; inset: -40%; border-radius: 50%; background: repeating-conic-gradient(from 0deg, rgba(255,235,150,.9) 0 6deg, transparent 6deg 18deg); animation: rays 1s ease-out forwards; pointer-events: none; z-index: 2; }
+.cell.lit { animation: glow 1.2s ease-out; z-index: 3; }
+.cell.piege-hit { animation: shake .5s; }
+.cell .pion { position: absolute; top: -6px; right: -4px; font-size: 1.1rem; z-index: 4; animation: bounce .5s ease-in-out infinite alternate; }
+.depart .pion { position: static; animation: bounce .5s ease-in-out infinite alternate; }
+@keyframes rays { 0% { opacity: 0; transform: scale(.3) rotate(0deg); } 40% { opacity: 1; } 100% { opacity: 0; transform: scale(1.4) rotate(60deg); } }
+@keyframes glow { 0%, 100% { box-shadow: 0 1px 3px rgba(0,0,0,.35); } 30%, 60% { box-shadow: 0 0 18px 6px #ffe27a, 0 0 40px 10px rgba(255,200,80,.6); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
+@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+.flash { position: fixed; inset: 0; pointer-events: none; z-index: 50; background: radial-gradient(circle at 50% 50%, rgba(255,245,200,.85), rgba(255,220,120,.25) 45%, transparent 75%); animation: flashFade 1s ease-out forwards; }
+.flash.red { background: radial-gradient(circle at 50% 50%, rgba(255,80,80,.8), rgba(160,20,20,.25) 45%, transparent 75%); }
+@keyframes flashFade { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
