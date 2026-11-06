@@ -224,7 +224,7 @@
         let lancers = 0;
         const choisir = () => new Promise((res) => {
           Object.keys(cells).forEach((k) => {
-            if (+k === 80) return;
+            if (+k === 80 || cells[k].classList.contains("ouverte") || cells[k].contains(pion)) return;
             cells[k].classList.add("choix");
             cells[k].onclick = () => {
               Object.values(cells).forEach((c) => { c.classList.remove("choix"); c.onclick = null; });
@@ -363,15 +363,15 @@
           await sleep(1900);
           if (bonus) {
             board.scrollIntoView({ behavior: "smooth", block: "start" });
-            info.textContent = "✨ Touche la case où tu veux aller !";
-            await say("✨ Face magique ! Choisis n'importe quelle case du plateau : le pion s'y téléporte (sauf l'arrivée, pas de raccourci vers la victoire !).");
-            const n = await choisir();
-            cells[n].scrollIntoView({ behavior: "smooth", block: "center" });
-            pos = n;
-            placePion();
-            flash();
-            await sleep(500);
-            await arrive(pos);
+            await say("🃏 Joker de Papa ! Tu peux ouvrir 2 cases de ton choix, sans bouger ton pion (sauf l'arrivée).");
+            for (let k = 1; k <= 2; k++) {
+              info.textContent = "🃏 Touche la case à ouvrir (" + k + "/2)";
+              const n = await choisir();
+              cells[n].scrollIntoView({ behavior: "smooth", block: "center" });
+              await sleep(400);
+              await arrive(n);
+              cells[n].classList.add("ouverte");
+            }
             stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
             info.textContent = "Case " + pos + " / 80";
             busy = false;
