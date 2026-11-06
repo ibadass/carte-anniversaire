@@ -368,3 +368,8 @@ body.playing .cell .ico { font-size: clamp(.8rem, 4vw, 1.15rem); }
 .ecran-haut .depart:has(.pion) { display: flex; justify-content: center; align-items: center; gap: 8px; }
 .ecran-haut .depart:has(.pion)::after { content: "est prêt à partir !"; color: #ffd95a; }
 .ecran-haut .depart .pion { font-size: 1.6rem; }
+
+/* Pion : miniature du visage de Papa */
+.pion.pion-photo { display: inline-block; width: 34px; height: 34px; border-radius: 50%; border: 3px solid #ffd95a; background-size: 175% auto; background-position: 47% 57%; background-repeat: no-repeat; background-color: #fff; box-shadow: 0 0 0 2px #13294b, 0 0 12px #ffd95a; filter: none; }
+.cell .pion.pion-photo { top: -12px; right: -10px; }
+.ecran-haut .depart .pion.pion-photo { width: 40px; height: 40px; }

@@ -296,7 +296,11 @@
         }
 
         const depart = el("div", "depart", "");
-        const pion = el("span", "pion", "👴");
+        const pion = el("span", "pion", cfg.photo ? "" : "👴");
+        if (cfg.photo) {
+          pion.classList.add("pion-photo");
+          pion.style.backgroundImage = "url(" + cfg.photo + ")";
+        }
         const de = el("div", "scene");
         const cube = el("div", "cube");
         const PIPS = { f1: [4], f2: [0, 8], f3: [0, 4, 8], f4: [0, 2, 6, 8], f5: [0, 2, 4, 6, 8] };
