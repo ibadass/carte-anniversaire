@@ -4,11 +4,45 @@ window.CARTE_CONFIG = {
   age: 80,
   photo: "IMG_8596.jpeg", // mettre "" pour masquer la photo
 
-  de: "Ta famille qui t'aime",
+  de: "Claudine, Florence, Dominique, François et toute la tribu",
   message:
     "80 ans de sourires, de belles histoires et de tendresse. Tu es notre plus beau livre, et on n'a pas fini de te lire !",
-  // Ordre et choix des modules : "feux", "bisous", "livres", "bd", "voeux"
-  modules: ["voyages", "bd", "western", "livres", "bisous", "feux", "voeux"],
+  // Ordre et choix des modules : "calendrier", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"
+  modules: ["calendrier", "voyages", "bd", "western", "livres", "bisous", "feux", "voeux"],
+  calendrier: [
+    { e: "💍", t: "Plus de 50 ans de mariage avec Claudine : quelle belle équipe vous faites !" },
+    { e: "💛", t: "Florence te dit qu'elle t'aime très fort." },
+    { e: "🌟", t: "Dominique pense très fort à toi aujourd'hui." },
+    { e: "😘", t: "François t'envoie plein de bisous." },
+    { e: "🎈", t: "Matthieu te souhaite le plus beau des anniversaires !" },
+    { e: "🥰", t: "Juliette t'embrasse très fort." },
+    { e: "🤗", t: "Camille te fait un gros câlin." },
+    { e: "🎁", t: "Nans te souhaite plein de belles choses." },
+    { e: "💖", t: "Elizabeth t'envoie tout son amour." },
+    { e: "😄", t: "Maël te fait un grand sourire." },
+    { e: "💋", t: "Une pluie de bisous de toute la famille !" },
+    { e: "📸", t: "Une petite pensée pour chacun de tes souvenirs." },
+    { e: "📚", t: "Un nouveau livre à découvrir : tu as de quoi lire !" },
+    { e: "🐕", t: "Tintin t'envoie ses amitiés : mille sabords, bon anniversaire !" },
+    { e: "🤠", t: "Lucky Luke tire plus vite que son ombre… pour fêter ça !" },
+    { e: "🌍", t: "Un tour du monde de bisous, rien que pour toi." },
+    { e: "🌞", t: "Santé, sourires et bonne humeur pour les années à venir." },
+    { e: "😂", t: "Des fous rires en famille, on en redemande !" },
+    { e: "🥂", t: "Une bonne table et des amis pour trinquer." },
+    { e: "🌳", t: "Des balades au grand air, à ton rythme." },
+    { e: "🌠", t: "Une étoile filante pour exaucer tes vœux." },
+    { e: "🍰", t: "Une part de gâteau rien que pour toi." },
+    { e: "🎶", t: "Des musiques qui donnent envie de danser." },
+    { e: "🌅", t: "Un coucher de soleil rien que pour toi." },
+    { e: "🏖️", t: "Des vacances de rêve." },
+    { e: "🤍", t: "De la tendresse à volonté." },
+    { e: "🚀", t: "Le meilleur est peut-être encore à venir." },
+    { e: "💐", t: "Un bouquet pour Claudine, à lui offrir de ta part." },
+    { e: "🙏", t: "Merci pour tout ce que tu nous as donné." },
+    { e: "🏆", t: "Toute ta famille est fière de toi." },
+    { e: "🎂", t: "80 ans : une belle étape, et il reste plein de choses à vivre !" },
+  ],
+
   livres: [
     { titre: "Le Petit Prince", auteur: "Saint-Exupéry", emoji: "🌹" },
     { titre: "Les Misérables", auteur: "Victor Hugo", emoji: "📕" },

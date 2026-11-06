@@ -120,6 +120,26 @@
         s.append(g);
       },
     },
+    calendrier: {
+      label: "📅 Calendrier",
+      build(s) {
+        s.append(el("p", "hint", "Touche une case pour ouvrir ton cadeau du jour 🎁"));
+        const msg = el("div", "bulle", "Ouvre une case pour découvrir le message !");
+        const g = el("div", "cal");
+        cfg.calendrier.forEach((d, i) => {
+          const c = el("button", "case");
+          const inner = el("div", "in");
+          inner.append(el("div", "face", String(i + 1)), el("div", "back", d.e));
+          c.append(inner);
+          c.onclick = () => {
+            c.classList.add("open");
+            msg.textContent = d.e + " " + d.t;
+          };
+          g.append(c);
+        });
+        s.append(g, msg);
+      },
+    },
     voyages: {
       label: "🌍 Voyages",
       build(s) {
