@@ -117,3 +117,29 @@ footer { text-align: center; padding: 16px; font-size: 1.1rem; }
 .pop-txt { animation: popIn .5s ease-out; }
 @keyframes popIn { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
 .cell.voiture { background: linear-gradient(135deg, #4a5568, #2d3748); }
+
+/* ---- Direction artistique : accueil, dé, plateau ---- */
+body { background: radial-gradient(circle at 50% 0%, #2a5d94 0%, #13294b 55%, #0b1830 100%) fixed; }
+header { min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 18px; }
+header .photo { width: 200px; height: 200px; }
+header .age { font-size: 6rem; }
+header h1 { font-size: 2.1rem; color: #fff; letter-spacing: .5px; }
+header p.accueil { font-size: 1.15rem; font-style: italic; color: #ffe9a8; }
+.go { max-width: 22rem; margin-top: 18px; box-shadow: 0 6px 20px rgba(244,197,66,.45); animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { transform: scale(1.04); } }
+.stage, .board { background: rgba(255,255,255,.08); border: 1px solid rgba(244,197,66,.45); border-radius: 22px; padding: 16px 14px 18px; margin: 0 0 22px; box-shadow: 0 8px 24px rgba(0,0,0,.35); text-align: center; }
+.stage-t { margin: 0 0 8px; font-size: 1.5rem; color: #f4c542; }
+.stage .oie-bar { justify-content: center; }
+.stage .big { max-width: 22rem; margin: 18px auto 10px; }
+.board .plateau { background: #0e2142; padding: 6px; border-radius: 12px; }
+main { padding-top: 24px; scroll-margin-top: 0; }
+@media (max-width: 500px) {
+  header { padding: 20px 14px; }
+  header .photo { width: 150px; height: 150px; margin-bottom: 8px; }
+  header .age { font-size: 4.6rem; }
+  header h1 { font-size: 1.6rem; }
+  header p { font-size: 1.05rem; }
+}
+nav[hidden] { display: none; }
+.stage .scene { margin: 26px auto 22px; }
+.stage .oie-bar .big { width: auto; margin: 0; font-size: 1.1rem; padding: 10px 18px; background: transparent; color: #f4c542; border: 2px solid #f4c542; }

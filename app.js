@@ -16,6 +16,8 @@
   $("#age").textContent = cfg.age;
   $("#titre").textContent = cfg.titre || "Joyeux anniversaire " + cfg.nom + " ! 🎂";
   $("#message").textContent = cfg.message;
+  $("#accueil").textContent = cfg.accueil || "";
+  $("#go").onclick = () => $("#main").scrollIntoView({ behavior: "smooth" });
   $("#de").textContent = "Avec tout notre amour, " + cfg.de + " 💝";
   document.title = "Joyeux anniversaire " + cfg.nom + " !";
 
@@ -213,6 +215,7 @@
         const info = el("p", "hint", "Atteins la case 80 pour fêter tes 80 ans !");
         let pos = 0;
         let busy = false;
+        let stageEl;
         const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
         const placePion = () => (pos ? cells[pos].append(pion) : depart.append(pion));
         const lit = (n, cls) => {
@@ -297,8 +300,11 @@
           de.classList.add("throw");
           let target = pos + r;
           if (target > 80) target = 160 - target;
+          await sleep(1900);
+          cells[Math.min(target, 80)].scrollIntoView({ behavior: "smooth", block: "center" });
           await move(target);
           await arrive();
+          stageEl.scrollIntoView({ behavior: "smooth", block: "start" });
           info.textContent = pos === 80 ? "🏆 Tu as gagné ! Bon anniversaire Papa !" : "Case " + pos + " / 80";
           busy = false;
           btn.textContent = "🎲 Lancer le dé";
@@ -315,9 +321,14 @@
           btn.textContent = "🚀 Démarrer le jeu";
           cube.classList.add("idle");
         };
-        const bar = el("div", "oie-bar");
-        bar.append(depart, de, btn, raz);
-        s.append(bar, info, plateau);
+        const stage = el("div", "stage");
+        const row = el("div", "oie-bar");
+        row.append(depart, raz);
+        stage.append(el("h2", "stage-t", "À toi de jouer, Papa !"), de, btn, info, row);
+        const board = el("div", "board");
+        board.append(el("h2", "stage-t", "Le plateau"), plateau);
+        s.append(stage, board);
+        stageEl = stage;
         placePion();
       },
     },
@@ -446,16 +457,6 @@
   };
 
   const nav = $("#nav"), main = $("#main"), tabs = {};
-  if (cfg.accueil) {
-    const acc = document.createElement("dialog");
-    acc.className = "pop";
-    const ok = el("button", "pop-close", "C'est parti ✕");
-    ok.onclick = () => acc.close();
-    acc.append(el("p", "pop-txt", cfg.accueil), ok);
-    document.body.append(acc);
-    acc.showModal ? acc.showModal() : acc.setAttribute("open", "");
-  }
-
   const active = cfg.modules.filter((m) => modules[m]);
   function select(id) {
     active.forEach((m) => {
@@ -473,5 +474,6 @@
     nav.append(b); main.append(s);
     tabs[m] = { b, s };
   });
+  if (active.length < 2) nav.hidden = true;
   if (active.length) { tabs[active[0]].b.classList.add("on"); tabs[active[0]].s.classList.add("on"); }
 })();
